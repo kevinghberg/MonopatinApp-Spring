@@ -24,13 +24,43 @@ public class Tarifa {
 	private LocalDate fecha;
 
 	public Tarifa() {
-		super();
 	}
 
-	public Tarifa(int tarifaRegular, int tarifaPausa, LocalDate fecha) {
-		super();
+	public Tarifa(int tarifaRegular, int tarifaPausa) {
 		this.tarifaRegular = tarifaRegular;
 		this.tarifaPausa = tarifaPausa;
+		this.fecha = LocalDate.now();
+	}
+
+	public int getIdTarifa() {
+		return idTarifa;
+	}
+
+	public void setIdTarifa(int idTarifa) {
+		this.idTarifa = idTarifa;
+	}
+
+	public int getTarifaRegular() {
+		return tarifaRegular;
+	}
+
+	public void setTarifaRegular(int tarifaRegular) {
+		this.tarifaRegular = tarifaRegular;
+	}
+
+	public int getTarifaPausa() {
+		return tarifaPausa;
+	}
+
+	public void setTarifaPausa(int tarifaPausa) {
+		this.tarifaPausa = tarifaPausa;
+	}
+
+	public LocalDate getFecha() {
+		return fecha;
+	}
+
+	public void setFecha(LocalDate fecha) {
 		this.fecha = fecha;
 	}
 	

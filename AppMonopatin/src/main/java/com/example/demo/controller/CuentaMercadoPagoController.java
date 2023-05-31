@@ -47,8 +47,7 @@ public class CuentaMercadoPagoController {
 	public CuentaMercadoPago agregarRelacion(@RequestBody RelacionUsuarioMPDto relacion) {
 		Usuario usuario = usuarioRepository.findByIdUsuario(relacion.getIdUsuario());
 		CuentaMercadoPago cuenta = repository.findById(relacion.getIdCuentaMP());
-		cuenta.getListaUsuarios().add(usuario);
-		System.out.println(cuenta);
+		cuenta.getListaUsuario().add(usuario);
 		return repository.save(cuenta);
 	}
 }

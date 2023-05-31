@@ -6,4 +6,6 @@ import com.example.demo.model.Parada;
 
 public interface ParadaRepository extends JpaRepository<Parada,Long>{
 
+	public Parada findById(int id);
+
 }

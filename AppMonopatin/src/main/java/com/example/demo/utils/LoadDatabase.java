@@ -16,7 +16,6 @@ class LoadDatabase {
 	@Bean
 	CommandLineRunner initDatabase() {
 		return args -> {
-			System.out.println("asd");
 		};
 	}
 }

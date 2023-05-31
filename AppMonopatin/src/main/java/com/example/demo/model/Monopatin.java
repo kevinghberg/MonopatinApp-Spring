@@ -17,8 +17,8 @@ public class Monopatin {
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "monopatin")
     private Viaje viaje;
     
-	/*@Column
-	List<Parada> paradasPermitidas;*/
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Parada parada;
 	
 	@Column
 	private boolean enUso;

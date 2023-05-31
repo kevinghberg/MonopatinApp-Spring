@@ -1,6 +1,7 @@
 package com.example.demo.model;
 
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.*;
 import lombok.Data;
@@ -18,7 +19,7 @@ public class Usuario {
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "usuario")
     private Viaje viaje;
     
-    @OneToMany(fetch = FetchType.EAGER, mappedBy="usuario")
+    @ManyToOne(fetch = FetchType.LAZY)
     private CuentaMercadoPago cuentamp;
 
 	@Column
@@ -35,12 +36,6 @@ public class Usuario {
 
 	@Column
 	private boolean estadoCuentaAnulada;
-
-	/*@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
-	@JoinTable(name = "relacion_usuario_mp", joinColumns = {
-			@JoinColumn(name = "usuario_id", referencedColumnName = "id", nullable = false, updatable = false) }, inverseJoinColumns = {
-					@JoinColumn(name = "cuentaMercadoPago_id", referencedColumnName = "id", nullable = false, updatable = false) })
-	private List<CuentaMercadoPago> listaMP;*/
 
 	public Usuario() {
 	}
@@ -106,11 +101,11 @@ public class Usuario {
 		this.estadoCuentaAnulada = estadoCuentaAnulada;
 	}
 
-	/*public List<CuentaMercadoPago> getListaMP() {
+	/*public Set<CuentaMercadoPago> getListaMP() {
 		return listaMP;
 	}
 
-	public void setListaMP(List<CuentaMercadoPago> listaMP) {
+	public void setListaMP(Set<CuentaMercadoPago> listaMP) {
 		this.listaMP = listaMP;
 	}*/
 

@@ -22,27 +22,19 @@ public class CuentaMercadoPago {
 	@Column
 	private LocalDate fechaAlta;
 	
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "usuario_id")
-	private List<Usuario> listaUsuarios;
-    
-    
-    // In Cuentas class: customer
+	private Set<Usuario> listaUsuario;
 
-    @OneToMany(targetEntity=com.example.demo.model.Usuario.class, 
-                mappedBy="cuentasMP")
-    public Set getOrders() { return orders; }
-
-    // In usuario class: order
-
-    @ManyToOne
-    @JoinColumn(name="usuario_id", nullable=false)
-    public Usuario getUsuario() { return usuario; }
-    
-    
-    
- 
 	public CuentaMercadoPago() {
+	}
+
+	public Set<Usuario> getListaUsuario() {
+		return listaUsuario;
+	}
+
+	public void setListaUsuario(Set<Usuario> listaUsuario) {
+		this.listaUsuario = listaUsuario;
 	}
 
 	public CuentaMercadoPago(double saldo) {
@@ -73,14 +65,4 @@ public class CuentaMercadoPago {
 		this.fechaAlta = fechaAlta;
 	}
 
-	public List<Usuario> getListaUsuarios() {
-		return listaUsuarios;
-	}
-
-	public void setListaUsuarios(List<Usuario> listaUsuarios) {
-		this.listaUsuarios = listaUsuarios;
-	}
-	
-	
-	
 }

@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,13 +27,27 @@ public class TarifaController {
 		this.repository = tarifa;
 	}
 
-	@GetMapping("/historico/")
+	@GetMapping("/historico")
 	public List<Tarifa> getHistoricoTarifas() {
 		return repository.findAll();
 	}
 
-	@PostMapping(value = "/agregar/", headers = "content-type=application/json")
+	@PostMapping(value = "/agregar", headers = "content-type=application/json")
 	public Tarifa agregar(@RequestBody Tarifa tarifa) {
 		return repository.save(tarifa);
+	}
+
+	@GetMapping(value = "/regular")
+	public long obtenerTarifaRegular() {
+		List<Tarifa> tarifas = repository.findAll();
+		Collections.sort(tarifas, (a, b) -> a.getFecha().compareTo(b.getFecha()));
+		return tarifas.get(0).getTarifaRegular();
+	}
+
+	@GetMapping(value = "/pausa")
+	public long obtenerTarifaPausa() {
+		List<Tarifa> tarifas = repository.findAll();
+		Collections.sort(tarifas, (a, b) -> a.getFecha().compareTo(b.getFecha()));
+		return tarifas.get(0).getTarifaPausa();
 	}
 }

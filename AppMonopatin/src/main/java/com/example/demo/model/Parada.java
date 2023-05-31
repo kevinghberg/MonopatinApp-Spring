@@ -1,6 +1,6 @@
 package com.example.demo.model;
 
-import java.util.List;
+import java.util.Set;
 
 import javax.persistence.*;
 
@@ -12,10 +12,12 @@ public class Parada {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int idParada;
+	private int id;
 	
-	/*@Column
-	private List<Monopatin> listaMonopatines;*/
+	
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "monopatin_id")
+	private Set<Monopatin> listaMonopatin;
 	
 	@Column
 	private float latitud;
@@ -30,6 +32,39 @@ public class Parada {
 	public Parada(float latitud, float longitud) {
 		super();
 		this.latitud = latitud;
+		this.longitud = longitud;
+	}
+
+	public int getIdParada() {
+		return id;
+	}
+
+	public void setIdParada(int id) {
+		this.id = id;
+	}
+
+	public Set<Monopatin> getListaMonopatines() {
+		return listaMonopatin;
+	}
+
+	public void setListaMonopatines(Set<Monopatin> listaMonopatin) {
+		this.listaMonopatin = listaMonopatin;
+	}
+
+
+	public float getLatitud() {
+		return latitud;
+	}
+
+	public void setLatitud(float latitud) {
+		this.latitud = latitud;
+	}
+
+	public float getLongitud() {
+		return longitud;
+	}
+
+	public void setLongitud(float longitud) {
 		this.longitud = longitud;
 	}
 
