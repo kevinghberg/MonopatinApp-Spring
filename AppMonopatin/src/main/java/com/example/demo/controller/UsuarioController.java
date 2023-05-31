@@ -38,7 +38,7 @@ public class UsuarioController {
 		return repository.findAll();
 	}
 
-	@PostMapping(value = "/agregar/", headers = "content-type=application/json")
+	@PostMapping(value = "/agregar", headers = "content-type=application/json")
 	public ResponseEntity<Usuario> agregarUser(@RequestBody Usuario usuario) {
 		if (validate(usuario.getEmail())) {
 			System.out.println("validado");

@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -44,27 +46,24 @@ public class ViajeController {
 		return repository.findAll();
 	}
 
-	@PostMapping(value = "/agregar/", headers = "content-type=application/json")
+	@PostMapping(value = "/agregar", headers = "content-type=application/json")
 	public Viaje agregarViaje(@RequestBody Viaje viaje) {
 		return repository.save(viaje);
 	}
 
-	@PostMapping(value = "/reservarmonopatin/", headers = "content-type=application/json")
-	public Viaje reservarMonopatin(@RequestBody ViajeMonopatinUsuarioDto vmu) {
+	@PostMapping(value = "/reservarmonopatin", headers = "content-type=application/json")
+	public ResponseEntity<Viaje> reservarMonopatin(@RequestBody ViajeMonopatinUsuarioDto vmu) {
 		Viaje viaje = new Viaje();
 		Usuario usuario = usuarioRepository.findByIdUsuario(vmu.getIdUsuario());
 		Monopatin monopatin = monopatinRepository.findByIdMonopatin(vmu.getIdMonopatin());
-
-		long tarifa = vmu.getPrecioEstimado();
-
-		System.out.println(vmu.getIdUsuario());
-		System.out.println(vmu.getIdMonopatin());
-		System.out.println(tarifa);
-		viaje.setMonopatin(monopatin);
-		viaje.setUsuario(usuario);
-		viaje.setPrecioEstimado(tarifa);
-
-		return repository.save(viaje);
+		if (usuario == null && monopatin == null) {
+			long tarifa = vmu.getPrecioEstimado();
+			viaje.setMonopatin(monopatin);
+			viaje.setUsuario(usuario);
+			viaje.setPrecioEstimado(tarifa);
+			return new ResponseEntity<>(repository.save(viaje), HttpStatus.OK);
+		} else {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
 	}
-
 }

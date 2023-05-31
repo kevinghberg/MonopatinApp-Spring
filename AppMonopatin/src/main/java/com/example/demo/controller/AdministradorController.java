@@ -31,7 +31,7 @@ public class AdministradorController {
 		return repository.findAll();
 	}
 
-	@PostMapping(value = "/agregar/", headers = "content-type=application/json")
+	@PostMapping(value = "/agregar", headers = "content-type=application/json")
 	public Administrador agregar(@RequestBody Administrador admin) {
 		return repository.save(admin);
 	}

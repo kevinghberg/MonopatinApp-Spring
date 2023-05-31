@@ -37,13 +37,13 @@ public class CuentaMercadoPagoController {
 		return repository.findAll();
 	}
 
-	@PostMapping(value = "/agregar/", headers = "content-type=application/json")
+	@PostMapping(value = "/agregar", headers = "content-type=application/json")
 	public CuentaMercadoPago agregar(@RequestBody CuentaMercadoPago cuentaMP) {
 		cuentaMP.setFechaAlta(LocalDate.now());
 		return repository.save(cuentaMP);
 	}
 
-	@PostMapping(value = "/relacion/",headers = "content-type=application/json")
+	@PostMapping(value = "/relacion",headers = "content-type=application/json")
 	public CuentaMercadoPago agregarRelacion(@RequestBody RelacionUsuarioMPDto relacion) {
 		Usuario usuario = usuarioRepository.findByIdUsuario(relacion.getIdUsuario());
 		CuentaMercadoPago cuenta = repository.findById(relacion.getIdCuentaMP());

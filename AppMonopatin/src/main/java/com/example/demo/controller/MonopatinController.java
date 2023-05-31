@@ -32,7 +32,7 @@ public class MonopatinController {
 		return repository.findAll();
 	}
 
-	@PostMapping(value = "/agregar/", headers = "content-type=application/json")
+	@PostMapping(value = "/agregar", headers = "content-type=application/json")
 	public Monopatin agregarMonopatin(@RequestBody Monopatin monopatin) {
 		return repository.save(monopatin);
 	}
