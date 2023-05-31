@@ -17,6 +17,9 @@ public class Usuario {
 	
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "usuario")
     private Viaje viaje;
+    
+    @OneToMany(fetch = FetchType.EAGER, mappedBy="usuario")
+    private CuentaMercadoPago cuentamp;
 
 	@Column
 	private String nombre;
@@ -33,10 +36,10 @@ public class Usuario {
 	@Column
 	private boolean estadoCuentaAnulada;
 
-	/*@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+	/*@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
 	@JoinTable(name = "relacion_usuario_mp", joinColumns = {
-			@JoinColumn(name = "usuario_id", referencedColumnName = "idUsuario", nullable = false, updatable = false) }, inverseJoinColumns = {
-					@JoinColumn(name = "mp_id", referencedColumnName = "id", nullable = false, updatable = false) })
+			@JoinColumn(name = "usuario_id", referencedColumnName = "id", nullable = false, updatable = false) }, inverseJoinColumns = {
+					@JoinColumn(name = "cuentaMercadoPago_id", referencedColumnName = "id", nullable = false, updatable = false) })
 	private List<CuentaMercadoPago> listaMP;*/
 
 	public Usuario() {

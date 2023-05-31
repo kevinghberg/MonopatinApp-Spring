@@ -27,7 +27,7 @@ public class AdministradorController {
 	}
 
 	@GetMapping("/")
-	public List<Administrador> getCuentasMP() {
+	public List<Administrador> getListaAdmins() {
 		return repository.findAll();
 	}
 
