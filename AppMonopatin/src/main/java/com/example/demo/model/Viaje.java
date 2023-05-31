@@ -9,50 +9,49 @@ import lombok.Data;
 @Entity
 @Data
 public class Viaje {
+
 	@Id
+    @Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int idViaje;
-	
-	@Column
-	private Monopatin monopatin;
-	
-	@Column
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "usuario_id")
 	private Usuario usuario;
 	
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "monopatin_id")
+	private Monopatin monopatin;
+
 	@Column
 	private LocalDate fechaInicio;
-	
+
 	@Column
 	private LocalDate fechaFin;
-	
+
 	@Column
 	private int kmRecorridos;
-	
+
 	@Column
 	private boolean estadoPausa;
-	
+
 	@Column
-	private String precioFinal;
-	
+	private long precioFinal;
+
 	@Column
-	private String precioEstimado;
-	
+	private long precioEstimado;
+
 	@Column
-	private String precioRecorridoActual;
-	
+	private long precioRecorridoActual;
+
 	@Column
 	private int tiempoPausa;
 
-	
-	
 	public Viaje() {
-		super();
 	}
 
 	public Viaje(Monopatin monopatin, Usuario usuario, LocalDate fechaInicio, LocalDate fechaFin, int kmRecorridos,
-			boolean estadoPausa, String precioFinal, String precioEstimado, String precioRecorridoActual,
-			int tiempoPausa) {
-		super();
+			boolean estadoPausa, long precioFinal, long precioEstimado, long precioRecorridoActual, int tiempoPausa) {
 		this.monopatin = monopatin;
 		this.usuario = usuario;
 		this.fechaInicio = fechaInicio;
@@ -64,11 +63,98 @@ public class Viaje {
 		this.precioRecorridoActual = precioRecorridoActual;
 		this.tiempoPausa = tiempoPausa;
 	}
-	
-	
 
-	
-	
-	
+	public Viaje(Monopatin monopatin) {
+		this.monopatin = monopatin;
+	}
+
+	public int getIdViaje() {
+		return idViaje;
+	}
+
+	public void setIdViaje(int idViaje) {
+		this.idViaje = idViaje;
+	}
+
+	public Monopatin getMonopatin() {
+		return monopatin;
+	}
+
+	public void setMonopatin(Monopatin monopatin) {
+		this.monopatin = monopatin;
+	}
+
+	public LocalDate getFechaInicio() {
+		return fechaInicio;
+	}
+
+	public void setFechaInicio(LocalDate fechaInicio) {
+		this.fechaInicio = fechaInicio;
+	}
+
+	public LocalDate getFechaFin() {
+		return fechaFin;
+	}
+
+	public void setFechaFin(LocalDate fechaFin) {
+		this.fechaFin = fechaFin;
+	}
+
+	public int getKmRecorridos() {
+		return kmRecorridos;
+	}
+
+	public void setKmRecorridos(int kmRecorridos) {
+		this.kmRecorridos = kmRecorridos;
+	}
+
+	public boolean isEstadoPausa() {
+		return estadoPausa;
+	}
+
+	public void setEstadoPausa(boolean estadoPausa) {
+		this.estadoPausa = estadoPausa;
+	}
+
+	public long getPrecioFinal() {
+		return precioFinal;
+	}
+
+	public void setPrecioFinal(long precioFinal) {
+		this.precioFinal = precioFinal;
+	}
+
+	public long getPrecioEstimado() {
+		return precioEstimado;
+	}
+
+	public void setPrecioEstimado(long precioEstimado) {
+		this.precioEstimado = precioEstimado;
+	}
+
+	public long getPrecioRecorridoActual() {
+		return precioRecorridoActual;
+	}
+
+	public void setPrecioRecorridoActual(long precioRecorridoActual) {
+		this.precioRecorridoActual = precioRecorridoActual;
+	}
+
+	public int getTiempoPausa() {
+		return tiempoPausa;
+	}
+
+	public void setTiempoPausa(int tiempoPausa) {
+		this.tiempoPausa = tiempoPausa;
+	}
+
+
+	public Usuario getUsuario() {
+		return usuario;
+	}
+
+	public void setUsuario(Usuario usuario) {
+		this.usuario = usuario;
+	}
 
 }

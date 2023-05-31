@@ -21,8 +21,8 @@ public class CuentaMercadoPago {
 	@Column
 	private LocalDate fechaAlta ;
 	
-	@ManyToMany(mappedBy = "listaMP", fetch = FetchType.LAZY)
-    private List<Usuario> listaUsuarios;
+	/*@ManyToMany(mappedBy = "listaMP", fetch = FetchType.LAZY)
+    private List<Usuario> listaUsuarios;*/
  
 	public CuentaMercadoPago() {
 		super();

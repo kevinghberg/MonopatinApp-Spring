@@ -1,5 +1,9 @@
 package com.example.demo.repository;
 
-public class CuentaMercadoPagoRepository {
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.example.demo.model.CuentaMercadoPago;
+
+public interface CuentaMercadoPagoRepository extends JpaRepository<CuentaMercadoPago, Long> {
 
 }

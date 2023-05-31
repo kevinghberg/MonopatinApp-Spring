@@ -14,8 +14,8 @@ public class Parada {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int idParada;
 	
-	@Column
-	private List<Monopatin> listaMonopatines;
+	/*@Column
+	private List<Monopatin> listaMonopatines;*/
 	
 	@Column
 	private float latitud;
