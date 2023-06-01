@@ -8,12 +8,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.model.Tarifa;
 import com.example.demo.model.Usuario;
 import com.example.demo.repository.UsuarioRepository;
 
@@ -41,10 +44,8 @@ public class UsuarioController {
 	@PostMapping(value = "/agregar", headers = "content-type=application/json")
 	public ResponseEntity<Usuario> agregarUser(@RequestBody Usuario usuario) {
 		if (validate(usuario.getEmail())) {
-			System.out.println("validado");
 			return new ResponseEntity<>(repository.save(usuario), HttpStatus.OK);
 		} else {
-			System.out.println("no validado");
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 	}
@@ -52,6 +53,17 @@ public class UsuarioController {
 	public static boolean validate(String emailStr) {
 		Matcher matcher = ptr.matcher(emailStr);
 		return matcher.matches();
+	}
+
+	@DeleteMapping(value = "/borrar/{id}")
+	public ResponseEntity<Usuario> borrar(@PathVariable int id) {
+		Usuario usuario = repository.findById(id);
+		System.out.println(usuario);
+		if (usuario != null) {
+			repository.delete(usuario);
+			return new ResponseEntity<>(usuario, HttpStatus.OK);
+		} else
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 	}
 
 }

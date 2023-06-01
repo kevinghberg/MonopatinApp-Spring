@@ -4,6 +4,9 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -11,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.model.CuentaMercadoPago;
 import com.example.demo.model.Monopatin;
 import com.example.demo.repository.MonopatinRepository;
 
@@ -40,6 +44,17 @@ public class MonopatinController {
 	@GetMapping("/obtener/{patente}")
 	public Monopatin findByPatente(@PathVariable String patente) {
 		return repository.findByPatente(patente);
+	}
+
+	@DeleteMapping(value = "/borrar/{id}")
+	public ResponseEntity<Monopatin> borrar(@PathVariable int id) {
+		Monopatin monopatin = repository.findById(id);
+		System.out.println(monopatin);
+		if (monopatin != null) {
+			repository.delete(monopatin);
+			return new ResponseEntity<>(monopatin, HttpStatus.OK);
+		} else
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 	}
 
 }

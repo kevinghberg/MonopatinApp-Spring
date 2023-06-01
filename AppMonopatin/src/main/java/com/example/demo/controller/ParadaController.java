@@ -4,6 +4,9 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -49,5 +52,16 @@ public class ParadaController {
 		Parada parada = repository.findById(relacion.getIdParada());
 		parada.getListaMonopatines().add(monopatinRepository.findByIdMonopatin(relacion.getIdMonopatin()));
 		return repository.save(parada);
+	}
+	
+	@DeleteMapping(value = "/borrar/{id}")
+	public ResponseEntity<Parada> borrar(@PathVariable int id) {
+		Parada parada = repository.findById(id);
+		System.out.println(parada);
+		if (parada != null) {
+			repository.delete(parada);
+			return new ResponseEntity<>(parada, HttpStatus.OK);
+		} else
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 	}
 }

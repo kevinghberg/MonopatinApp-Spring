@@ -9,6 +9,8 @@ import com.example.demo.model.Viaje;
 
 public interface ViajeRepository extends JpaRepository<Viaje, Long> {
 
-	List<Viaje> findAll();
+	public List<Viaje> findAll();
+
+	public Viaje findById(int id);
 
 }

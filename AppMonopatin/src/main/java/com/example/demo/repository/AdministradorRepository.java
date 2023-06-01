@@ -8,4 +8,6 @@ import com.example.demo.model.Administrador;
 @Repository
 public interface AdministradorRepository extends JpaRepository<Administrador, Long> {
 
+	Administrador findById(int id);
+
 }
