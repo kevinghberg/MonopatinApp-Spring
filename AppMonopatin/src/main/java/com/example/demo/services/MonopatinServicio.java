@@ -19,4 +19,9 @@ public class MonopatinServicio {
 		return repository.findByIdMonopatin(idMonopatin);
 	}
 
+	public Monopatin findByIdMonopatin(int idMonopatin) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

@@ -16,54 +16,64 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.dtos.ParadaMonopatinDto;
+import com.example.demo.model.Localidad;
 import com.example.demo.model.Monopatin;
 import com.example.demo.model.Parada;
 import com.example.demo.repository.MonopatinRepository;
 import com.example.demo.repository.ParadaRepository;
+import com.example.demo.services.MonopatinServicio;
+import com.example.demo.services.ParadaServicio;
 
 @RestController
 @RequestMapping("paradas")
 public class ParadaController {
 
-	@Qualifier("paradaRepository")
+	@Qualifier("paradaServicio")
 	@Autowired
 
-	private ParadaRepository repository;
-	private MonopatinRepository monopatinRepository;
+	private ParadaServicio paradaServicio;
+	private MonopatinServicio monopatinServicio;
 
-	public ParadaController(@Qualifier("paradaRepository") ParadaRepository parada,
-			@Qualifier("monopatinRepository") MonopatinRepository monopatin) {
-		this.repository = parada;
-		this.monopatinRepository = monopatin;
+	public ParadaController(@Qualifier("paradaServicio") ParadaServicio paradaServicio,
+			@Qualifier("monopatinServicio") MonopatinServicio monopatinServicio) {
+		this.paradaServicio = paradaServicio;
+		this.monopatinServicio = monopatinServicio;
 	}
 
 	@GetMapping("/")
 	public List<Parada> getParadas() {
-		return repository.findAll();
+		return paradaServicio.findAll();
 	}
 
 	@PostMapping(value = "/agregar", headers = "content-type=application/json")
 	public Parada agregar(@RequestBody Parada parada) {
-		return repository.save(parada);
+		return paradaServicio.save(parada);
 	}
 
 	@PostMapping(value = "/actualizar")
 	public Parada agregarMonopatin(@RequestBody ParadaMonopatinDto relacion) {
-		Parada parada = repository.findById(relacion.getIdParada());
-		parada.getListaMonopatines().add(monopatinRepository.findByIdMonopatin(relacion.getIdMonopatin()));
-		return repository.save(parada);
+		Parada parada = paradaServicio.findById(relacion.getIdParada());
+		parada.getListaMonopatines().add(monopatinServicio.findByIdMonopatin(relacion.getIdMonopatin()));
+		return paradaServicio.save(parada);
 	}
-	
+
 	@DeleteMapping(value = "/borrar/{id}")
 	public ResponseEntity<Parada> borrar(@PathVariable int id) {
-		Parada parada = repository.findById(id);
+		Parada parada = paradaServicio.findById(id);
 		System.out.println(parada);
 		if (parada != null) {
-			repository.delete(parada);
+			paradaServicio.delete(parada);
 			return new ResponseEntity<>(parada, HttpStatus.OK);
 		} else
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 	}
-	
-	//https://stackoverflow.com/questions/27379233/android-find-nearest-location-to-my-current-place
+
+	@GetMapping(value = "/diferencia/{latitud}/{longitud}/{distancia}")
+	public List<Parada> obtenerCercanas(@PathVariable Double latitud, @PathVariable Double longitud, @PathVariable double distancia) {
+		List<Parada> listaCercanas = paradaServicio.obtenerParadasCercanas(longitud, latitud, distancia);
+		System.out.println(listaCercanas);
+		return listaCercanas;
+	}
+
+	// https://stackoverflow.com/questions/27379233/android-find-nearest-location-to-my-current-place
 }
