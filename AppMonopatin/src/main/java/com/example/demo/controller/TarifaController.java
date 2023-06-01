@@ -58,7 +58,7 @@ public class TarifaController {
 	
 	@DeleteMapping(value = "/borrar/{id}")
 	public ResponseEntity<Tarifa> borrar(@PathVariable int id) {
-		Tarifa tarifa = repository.findById(id);
+		Tarifa tarifa = repository.findByIdTarifa(id);
 		System.out.println(tarifa);
 		if (tarifa != null) {
 			repository.delete(tarifa);

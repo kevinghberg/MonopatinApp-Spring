@@ -1,5 +1,7 @@
 package com.example.demo.controller;
 
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,21 +58,24 @@ public class ViajeController {
 	public ResponseEntity<Viaje> reservarMonopatin(@RequestBody ViajeMonopatinUsuarioDto vmu) {
 		Viaje viaje = new Viaje();
 		Usuario usuario = usuarioRepository.findByIdUsuario(vmu.getIdUsuario());
+		System.out.println(vmu.getIdUsuario());
 		Monopatin monopatin = monopatinRepository.findByIdMonopatin(vmu.getIdMonopatin());
-		if (usuario == null && monopatin == null) {
+		System.out.println(vmu.getIdMonopatin());
+		if (usuario != null && monopatin != null) {
 			long tarifa = vmu.getPrecioEstimado();
 			viaje.setMonopatin(monopatin);
 			viaje.setUsuario(usuario);
 			viaje.setPrecioEstimado(tarifa);
+			viaje.setFechaInicio(LocalDate.now());
 			return new ResponseEntity<>(repository.save(viaje), HttpStatus.OK);
 		} else {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 	}
-	
+
 	@DeleteMapping(value = "/borrar/{id}")
 	public ResponseEntity<Viaje> borrar(@PathVariable int id) {
-		Viaje viaje = repository.findById(id);
+		Viaje viaje = repository.findByIdViaje(id);
 		System.out.println(viaje);
 		if (viaje != null) {
 			repository.delete(viaje);

@@ -57,7 +57,7 @@ public class UsuarioController {
 
 	@DeleteMapping(value = "/borrar/{id}")
 	public ResponseEntity<Usuario> borrar(@PathVariable int id) {
-		Usuario usuario = repository.findById(id);
+		Usuario usuario = repository.findByIdUsuario(id);
 		System.out.println(usuario);
 		if (usuario != null) {
 			repository.delete(usuario);

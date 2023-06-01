@@ -12,5 +12,4 @@ public interface MonopatinRepository extends JpaRepository<Monopatin, Long> {
 
 	public Monopatin findByIdMonopatin(int idMonopatin);
 
-	public Monopatin findById(int id);
 }

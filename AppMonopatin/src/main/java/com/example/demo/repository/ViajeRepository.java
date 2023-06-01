@@ -11,6 +11,6 @@ public interface ViajeRepository extends JpaRepository<Viaje, Long> {
 
 	public List<Viaje> findAll();
 
-	public Viaje findById(int id);
+	public Viaje findByIdViaje(int id);
 
 }
