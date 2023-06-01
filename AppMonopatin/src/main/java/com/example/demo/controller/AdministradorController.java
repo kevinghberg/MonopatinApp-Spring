@@ -16,38 +16,36 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.model.Administrador;
 import com.example.demo.repository.AdministradorRepository;
+import com.example.demo.services.AdministradorServicio;
 
 @RestController
 @RequestMapping("administrador")
 public class AdministradorController {
 
-	@Qualifier("administradorRepository")
+	@Qualifier("administradorServicio")
 	@Autowired
 
-	private AdministradorRepository repository;
+	private AdministradorServicio administradorServicio;
 
-	public AdministradorController(@Qualifier("administradorRepository") AdministradorRepository admin) {
-		this.repository = admin;
+	public AdministradorController(@Qualifier("administradorServicio") AdministradorServicio administradorServicio) {
+		this.administradorServicio = administradorServicio;
 	}
 
 	@GetMapping("/")
 	public List<Administrador> getListaAdmins() {
-		return repository.findAll();
+		return administradorServicio.obtenerListaAdmins();
 	}
 
 	@PostMapping(value = "/agregar", headers = "content-type=application/json")
 	public Administrador agregar(@RequestBody Administrador admin) {
-		return repository.save(admin);
+		return administradorServicio.agregarAdmin(admin);
 	}
 
 	@DeleteMapping(value = "/borrar/{id}")
-	public ResponseEntity<Administrador> borrar(@PathVariable int id) {
-		Administrador administrador = repository.findById(id);
-		System.out.println(administrador);
-		if (administrador != null) {
-			repository.delete(administrador);
-			return new ResponseEntity<>(administrador, HttpStatus.OK);
+	public ResponseEntity<String> borrar(@PathVariable int id) {
+		if (administradorServicio.borrar(id)) {
+			return new ResponseEntity<>("Borrado", HttpStatus.OK);
 		} else
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>("No borrado", HttpStatus.BAD_REQUEST);
 	}
 }

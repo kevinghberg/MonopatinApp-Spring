@@ -8,79 +8,59 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.example.demo.dtos.ViajeMonopatinUsuarioDto;
-import com.example.demo.model.Monopatin;
-import com.example.demo.model.Usuario;
 import com.example.demo.model.Viaje;
-import com.example.demo.repository.MonopatinRepository;
-import com.example.demo.repository.UsuarioRepository;
-import com.example.demo.repository.ViajeRepository;
+import com.example.demo.services.*;
 
 @RestController
 @RequestMapping("viajes")
 public class ViajeController {
 
-	@Qualifier("viajeRepository")
+	@Qualifier("viajeServicio")
 	@Autowired
 
-	private ViajeRepository repository;
-	private MonopatinRepository monopatinRepository;
-	private UsuarioRepository usuarioRepository;
+	private ViajeServicio viajeServicio;
+	private MonopatinServicio monopatinServicio;
+	private UsuarioServicio usuarioServicio;
 
-	public ViajeController(@Qualifier("viajeRepository") ViajeRepository viaje,
-			@Qualifier("monopatinRepository") MonopatinRepository monopatinRepository,
-			@Qualifier("usuarioRepository") UsuarioRepository usuarioRepository) {
-		this.repository = viaje;
-		this.monopatinRepository = monopatinRepository;
-		this.usuarioRepository = usuarioRepository;
+	public ViajeController(@Qualifier("viajeServicio") ViajeServicio viajeServicio,
+			@Qualifier("monopatinServicio") MonopatinServicio monopatinServicio,
+			@Qualifier("usuarioServicio") UsuarioServicio usuarioServicio) {
+		this.viajeServicio = viajeServicio;
+		this.monopatinServicio = monopatinServicio;
+		this.usuarioServicio = usuarioServicio;
 	}
 
 	@GetMapping("/")
-	public List<Viaje> getUsuarios() {
-		return repository.findAll();
+	public List<Viaje> getViajes() {
+		return viajeServicio.getViajes();
+
 	}
 
 	@PostMapping(value = "/agregar", headers = "content-type=application/json")
 	public Viaje agregarViaje(@RequestBody Viaje viaje) {
-		return repository.save(viaje);
+		return viajeServicio.agregarViaje(viaje);
 	}
 
 	@PostMapping(value = "/reservarmonopatin", headers = "content-type=application/json")
-	public ResponseEntity<Viaje> reservarMonopatin(@RequestBody ViajeMonopatinUsuarioDto vmu) {
-		Viaje viaje = new Viaje();
-		Usuario usuario = usuarioRepository.findByIdUsuario(vmu.getIdUsuario());
-		System.out.println(vmu.getIdUsuario());
-		Monopatin monopatin = monopatinRepository.findByIdMonopatin(vmu.getIdMonopatin());
-		System.out.println(vmu.getIdMonopatin());
-		if (usuario != null && monopatin != null) {
-			long tarifa = vmu.getPrecioEstimado();
-			viaje.setMonopatin(monopatin);
-			viaje.setUsuario(usuario);
-			viaje.setPrecioEstimado(tarifa);
-			viaje.setFechaInicio(LocalDate.now());
-			return new ResponseEntity<>(repository.save(viaje), HttpStatus.OK);
+	public ResponseEntity<String> reservarMonopatin(@RequestBody ViajeMonopatinUsuarioDto vmudto) {
+		Viaje viaje = viajeServicio.reservarMonopatin(vmudto);
+		if (viaje != null) {
+			return new ResponseEntity<>(viaje.toString(), HttpStatus.OK);
 		} else {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>("No reservado",HttpStatus.BAD_REQUEST);
 		}
 	}
 
 	@DeleteMapping(value = "/borrar/{id}")
-	public ResponseEntity<Viaje> borrar(@PathVariable int id) {
-		Viaje viaje = repository.findByIdViaje(id);
-		System.out.println(viaje);
-		if (viaje != null) {
-			repository.delete(viaje);
-			return new ResponseEntity<>(viaje, HttpStatus.OK);
-		} else
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+	public ResponseEntity<String> borrar(@PathVariable int id) {
+		if (viajeServicio.borrarViaje(id)) {
+			return new ResponseEntity<String>("Borrado", HttpStatus.OK);
+		} else {
+			return new ResponseEntity<String>("No borrado", HttpStatus.BAD_REQUEST);
+		}
+
 	}
 }

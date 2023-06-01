@@ -11,16 +11,16 @@ import lombok.Data;
 public class Viaje {
 
 	@Id
-    @Column(name = "id")
+	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int idViaje;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "usuario_id")
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "usuario_id")
 	private Usuario usuario;
-	
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "monopatin_id")
+
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "monopatin_id")
 	private Monopatin monopatin;
 
 	@Column
@@ -148,13 +148,20 @@ public class Viaje {
 		this.tiempoPausa = tiempoPausa;
 	}
 
-
 	public Usuario getUsuario() {
 		return usuario;
 	}
 
 	public void setUsuario(Usuario usuario) {
 		this.usuario = usuario;
+	}
+
+	@Override
+	public String toString() {
+		return "Viaje [id:" + idViaje + ", usuario:" + usuario.getIdUsuario() + ", monopatin:" + monopatin.getPatente()
+				+ ", fechaInicio:" + fechaInicio + ", fechaFin:" + fechaFin + ", kmRecorridos:" + kmRecorridos
+				+ ", estadoPausa:" + estadoPausa + ", precioFinal:" + precioFinal + ", precioEstimado:" + precioEstimado
+				+ ", precioRecorridoActual:" + precioRecorridoActual + ", tiempoPausa:" + tiempoPausa + "]";
 	}
 
 }

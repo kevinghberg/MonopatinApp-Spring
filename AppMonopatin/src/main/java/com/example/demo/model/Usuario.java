@@ -41,7 +41,6 @@ public class Usuario {
 	}
 
 	public Usuario(String nombre, String apellido, String celular, String email) {
-		super();
 		this.nombre = nombre;
 		this.apellido = apellido;
 		this.celular = celular;

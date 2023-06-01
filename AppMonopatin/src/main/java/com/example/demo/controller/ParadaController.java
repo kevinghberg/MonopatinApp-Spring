@@ -64,4 +64,6 @@ public class ParadaController {
 		} else
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 	}
+	
+	//https://stackoverflow.com/questions/27379233/android-find-nearest-location-to-my-current-place
 }
