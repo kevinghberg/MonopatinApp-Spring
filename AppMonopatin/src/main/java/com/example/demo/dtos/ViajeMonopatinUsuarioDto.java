@@ -7,6 +7,7 @@ public class ViajeMonopatinUsuarioDto {
 	public int idUsuario;
 
 	public int idParadaComienzo;
+	
 	public int idParadaDestino;
 
 	public ViajeMonopatinUsuarioDto() {
@@ -33,6 +34,22 @@ public class ViajeMonopatinUsuarioDto {
 
 	public void setIdUsuario(int idUsuario) {
 		this.idUsuario = idUsuario;
+	}
+
+	public int getIdParadaComienzo() {
+		return idParadaComienzo;
+	}
+
+	public void setIdParadaComienzo(int idParadaComienzo) {
+		this.idParadaComienzo = idParadaComienzo;
+	}
+
+	public int getIdParadaDestino() {
+		return idParadaDestino;
+	}
+
+	public void setIdParadaDestino(int idParadaDestino) {
+		this.idParadaDestino = idParadaDestino;
 	}
 
 }

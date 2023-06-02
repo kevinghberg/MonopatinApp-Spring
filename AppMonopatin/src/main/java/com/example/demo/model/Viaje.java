@@ -36,13 +36,13 @@ public class Viaje {
 	private boolean estadoPausa;
 
 	@Column
-	private long precioFinal;
+	private double precioFinal;
 
 	@Column
-	private long precioEstimado;
+	private double precioEstimado;
 
 	@Column
-	private long precioRecorridoActual;
+	private double precioRecorridoActual;
 
 	@Column
 	private int tiempoPausa;
@@ -116,7 +116,7 @@ public class Viaje {
 		this.estadoPausa = estadoPausa;
 	}
 
-	public long getPrecioFinal() {
+	public double getPrecioFinal() {
 		return precioFinal;
 	}
 
@@ -124,19 +124,19 @@ public class Viaje {
 		this.precioFinal = precioFinal;
 	}
 
-	public long getPrecioEstimado() {
+	public double getPrecioEstimado() {
 		return precioEstimado;
 	}
 
-	public void setPrecioEstimado(long precioEstimado) {
-		this.precioEstimado = precioEstimado;
+	public void setPrecioEstimado(double precioEstimado2) {
+		this.precioEstimado = precioEstimado2;
 	}
 
-	public long getPrecioRecorridoActual() {
+	public double getPrecioRecorridoActual() {
 		return precioRecorridoActual;
 	}
 
-	public void setPrecioRecorridoActual(long precioRecorridoActual) {
+	public void setPrecioRecorridoActual(double precioRecorridoActual) {
 		this.precioRecorridoActual = precioRecorridoActual;
 	}
 
