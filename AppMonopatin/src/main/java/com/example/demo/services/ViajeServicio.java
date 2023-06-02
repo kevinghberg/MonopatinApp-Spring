@@ -33,7 +33,7 @@ public class ViajeServicio {
 		return viajeRepository.findAll();
 	}
 
-	public Viaje agregarViaje(Viaje viaje) {
+	public Viaje save(Viaje viaje) {
 		return viajeRepository.save(viaje);
 	}
 
@@ -41,7 +41,7 @@ public class ViajeServicio {
 		return viajeRepository.findByIdViaje(id);
 	}
 
-	public boolean borrarViaje(int id) {
+	public boolean delete(int id) {
 		Viaje viaje = viajeRepository.findByIdViaje(id);
 		if (viaje != null) {
 			viajeRepository.delete(viaje);
@@ -54,6 +54,8 @@ public class ViajeServicio {
 		Viaje viaje = new Viaje();
 		Usuario usuario = usuarioRepository.findByIdUsuario(vmudto.getIdUsuario());
 		Monopatin monopatin = monopatinRepository.findByIdMonopatin(vmudto.getIdMonopatin());
+		
+		float precioEstimado = 
 		if (usuario != null && monopatin != null) {
 			long tarifa = vmudto.getPrecioEstimado();
 			viaje.setMonopatin(monopatin);
@@ -63,6 +65,10 @@ public class ViajeServicio {
 			return (viajeRepository.save(viaje));
 		} else
 			return null;
+	}
+
+	public List<Viaje> findAll() {
+		return viajeRepository.findAll();
 	}
 
 }

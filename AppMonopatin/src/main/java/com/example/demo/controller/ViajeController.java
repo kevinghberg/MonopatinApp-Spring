@@ -1,7 +1,5 @@
 package com.example.demo.controller;
 
-import java.sql.Date;
-import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.example.demo.dtos.ViajeMonopatinUsuarioDto;
 import com.example.demo.model.Viaje;
-import com.example.demo.services.*;
+import com.example.demo.services.ViajeServicio;
 
 @RestController
 @RequestMapping("viajes")
@@ -22,26 +20,19 @@ public class ViajeController {
 	@Autowired
 
 	private ViajeServicio viajeServicio;
-	private MonopatinServicio monopatinServicio;
-	private UsuarioServicio usuarioServicio;
 
-	public ViajeController(@Qualifier("viajeServicio") ViajeServicio viajeServicio,
-			@Qualifier("monopatinServicio") MonopatinServicio monopatinServicio,
-			@Qualifier("usuarioServicio") UsuarioServicio usuarioServicio) {
+	public ViajeController(@Qualifier("viajeServicio") ViajeServicio viajeServicio) {
 		this.viajeServicio = viajeServicio;
-		this.monopatinServicio = monopatinServicio;
-		this.usuarioServicio = usuarioServicio;
 	}
 
 	@GetMapping("/")
 	public List<Viaje> getViajes() {
-		return viajeServicio.getViajes();
-
+		return viajeServicio.findAll();
 	}
 
 	@PostMapping(value = "/agregar", headers = "content-type=application/json")
 	public Viaje agregarViaje(@RequestBody Viaje viaje) {
-		return viajeServicio.agregarViaje(viaje);
+		return viajeServicio.save(viaje);
 	}
 
 	@PostMapping(value = "/reservarmonopatin", headers = "content-type=application/json")
@@ -50,14 +41,14 @@ public class ViajeController {
 		if (viaje != null) {
 			return new ResponseEntity<>(viaje.toString(), HttpStatus.OK);
 		} else {
-			return new ResponseEntity<>("No reservado",HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>("No reservado", HttpStatus.BAD_REQUEST);
 		}
 	}
 
 	@DeleteMapping(value = "/borrar/{id}")
 	public ResponseEntity<String> borrar(@PathVariable int id) {
-		if (viajeServicio.borrarViaje(id)) {
-			return new ResponseEntity<String>("Borrado", HttpStatus.OK);
+		if (viajeServicio.delete(id)) {
+			return new ResponseEntity<String>("Borrado" + id, HttpStatus.OK);
 		} else {
 			return new ResponseEntity<String>("No borrado", HttpStatus.BAD_REQUEST);
 		}

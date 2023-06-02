@@ -18,15 +18,15 @@ public class AdministradorServicio {
 		this.administradorRepository = administradorRepository;
 	}
 
-	public List<Administrador> obtenerListaAdmins() {
+	public List<Administrador> findAll() {
 		return administradorRepository.findAll();
 	}
 
-	public Administrador agregarAdmin(Administrador admin) {
+	public Administrador save(Administrador admin) {
 		return administradorRepository.save(admin);
 	}
 
-	public boolean borrar(int id) {
+	public boolean delete(int id) {
 		Administrador admin = administradorRepository.findById(id);
 		if (admin != null) {
 			administradorRepository.delete(admin);

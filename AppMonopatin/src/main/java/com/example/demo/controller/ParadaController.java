@@ -10,17 +10,12 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.dtos.ParadaMonopatinDto;
-import com.example.demo.model.Localidad;
-import com.example.demo.model.Monopatin;
 import com.example.demo.model.Parada;
-import com.example.demo.repository.MonopatinRepository;
-import com.example.demo.repository.ParadaRepository;
 import com.example.demo.services.MonopatinServicio;
 import com.example.demo.services.ParadaServicio;
 
@@ -32,12 +27,9 @@ public class ParadaController {
 	@Autowired
 
 	private ParadaServicio paradaServicio;
-	private MonopatinServicio monopatinServicio;
 
-	public ParadaController(@Qualifier("paradaServicio") ParadaServicio paradaServicio,
-			@Qualifier("monopatinServicio") MonopatinServicio monopatinServicio) {
+	public ParadaController(@Qualifier("paradaServicio") ParadaServicio paradaServicio) {
 		this.paradaServicio = paradaServicio;
-		this.monopatinServicio = monopatinServicio;
 	}
 
 	@GetMapping("/")
@@ -50,29 +42,27 @@ public class ParadaController {
 		return paradaServicio.save(parada);
 	}
 
-	@PostMapping(value = "/actualizar")
-	public Parada agregarMonopatin(@RequestBody ParadaMonopatinDto relacion) {
-		Parada parada = paradaServicio.findById(relacion.getIdParada());
-		parada.getListaMonopatines().add(monopatinServicio.findByIdMonopatin(relacion.getIdMonopatin()));
-		return paradaServicio.save(parada);
-	}
-
-	@DeleteMapping(value = "/borrar/{id}")
-	public ResponseEntity<Parada> borrar(@PathVariable int id) {
-		Parada parada = paradaServicio.findById(id);
-		System.out.println(parada);
-		if (parada != null) {
-			paradaServicio.delete(parada);
-			return new ResponseEntity<>(parada, HttpStatus.OK);
-		} else
+	@PostMapping(value = "/agregarmonopatin")
+	public ResponseEntity<Parada> agregarRelacionMonopatin(@RequestBody ParadaMonopatinDto relacion) {
+		Parada parada = paradaServicio.agregarRelacionMonopatin(relacion);
+		if (parada != null)
+			return new ResponseEntity<>(HttpStatus.OK);
+		else
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 	}
 
+	@DeleteMapping(value = "/borrar/{id}")
+	public ResponseEntity<String> borrar(@PathVariable int id) {
+		if (paradaServicio.delete(id)) {
+			return new ResponseEntity<>("Borrado", HttpStatus.OK);
+		} else
+			return new ResponseEntity<>("No borrado", HttpStatus.BAD_REQUEST);
+	}
+
 	@GetMapping(value = "/diferencia/{latitud}/{longitud}/{distancia}")
-	public List<Parada> obtenerCercanas(@PathVariable Double latitud, @PathVariable Double longitud, @PathVariable double distancia) {
-		List<Parada> listaCercanas = paradaServicio.obtenerParadasCercanas(longitud, latitud, distancia);
-		System.out.println(listaCercanas);
-		return listaCercanas;
+	public List<Parada> obtenerCercanas(@PathVariable Double latitud, @PathVariable Double longitud,
+			@PathVariable double distancia) {
+		return paradaServicio.obtenerParadasCercanas(longitud, latitud, distancia);
 	}
 
 	// https://stackoverflow.com/questions/27379233/android-find-nearest-location-to-my-current-place

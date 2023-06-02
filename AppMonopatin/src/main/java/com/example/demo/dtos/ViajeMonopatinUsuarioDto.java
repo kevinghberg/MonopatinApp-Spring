@@ -5,16 +5,18 @@ public class ViajeMonopatinUsuarioDto {
 	public int idMonopatin;
 
 	public int idUsuario;
-	
-	public long precioEstimado;
+
+	public int idParadaComienzo;
+	public int idParadaDestino;
 
 	public ViajeMonopatinUsuarioDto() {
 	}
 
-	public ViajeMonopatinUsuarioDto(int idMonopatin, int idUsuario, long precioEstimado) {
+	public ViajeMonopatinUsuarioDto(int idMonopatin, int idUsuario,int idParadaComienzo, int idParadaDestino) {
 		this.idMonopatin = idMonopatin;
 		this.idUsuario = idUsuario;
-		this.precioEstimado = precioEstimado;
+		this.idParadaComienzo = idParadaComienzo;
+		this.idParadaDestino = idParadaDestino;
 	}
 
 	public int getIdMonopatin() {
@@ -33,13 +35,4 @@ public class ViajeMonopatinUsuarioDto {
 		this.idUsuario = idUsuario;
 	}
 
-	public long getPrecioEstimado() {
-		return precioEstimado;
-	}
-
-	public void setPrecioEstimado(long precioEstimado) {
-		this.precioEstimado = precioEstimado;
-	}
-
-	
 }

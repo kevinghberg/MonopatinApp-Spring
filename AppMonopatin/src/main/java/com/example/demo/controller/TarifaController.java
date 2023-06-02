@@ -17,53 +17,46 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.model.Parada;
 import com.example.demo.model.Tarifa;
-import com.example.demo.repository.TarifaRepository;
+import com.example.demo.services.TarifaServicio;
 
 @RestController
 @RequestMapping("tarifas")
 public class TarifaController {
 
-	@Qualifier("tarifaRepository")
+	@Qualifier("tarifaServicio")
 	@Autowired
 
-	private TarifaRepository repository;
+	private TarifaServicio tarifaServicio;
 
-	public TarifaController(@Qualifier("tarifaRepository") TarifaRepository tarifa) {
-		this.repository = tarifa;
+	public TarifaController(@Qualifier("tarifaServicio") TarifaServicio tarifa) {
+		this.tarifaServicio = tarifa;
 	}
 
 	@GetMapping("/historico")
 	public List<Tarifa> getHistoricoTarifas() {
-		return repository.findAll();
+		return tarifaServicio.findAll();
 	}
 
 	@PostMapping(value = "/agregar", headers = "content-type=application/json")
 	public Tarifa agregar(@RequestBody Tarifa tarifa) {
-		return repository.save(tarifa);
+		return tarifaServicio.save(tarifa);
 	}
 
-	@GetMapping(value = "/regular")
-	public long obtenerTarifaRegular() {
-		List<Tarifa> tarifas = repository.findAll();
-		Collections.sort(tarifas, (a, b) -> a.getFecha().compareTo(b.getFecha()));
-		return tarifas.get(0).getTarifaRegular();
+	@GetMapping(value = "/valorregular")
+	public float obtenerTarifaRegular() {
+		return tarifaServicio.obtenerTarifaRegular();
 	}
 
-	@GetMapping(value = "/pausa")
-	public long obtenerTarifaPausa() {
-		List<Tarifa> tarifas = repository.findAll();
-		Collections.sort(tarifas, (a, b) -> a.getFecha().compareTo(b.getFecha()));
-		return tarifas.get(0).getTarifaPausa();
+	@GetMapping(value = "/valorpausa")
+	public float obtenerTarifaPausa() {
+		return tarifaServicio.obtenerTarifaPausa();
 	}
-	
+
 	@DeleteMapping(value = "/borrar/{id}")
-	public ResponseEntity<Tarifa> borrar(@PathVariable int id) {
-		Tarifa tarifa = repository.findByIdTarifa(id);
-		System.out.println(tarifa);
-		if (tarifa != null) {
-			repository.delete(tarifa);
-			return new ResponseEntity<>(tarifa, HttpStatus.OK);
-		} else
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+	public ResponseEntity<String> borrar(@PathVariable int id) {
+		if (tarifaServicio.delete(id))
+			return new ResponseEntity<>("Borrado id: " + id, HttpStatus.OK);
+		else
+			return new ResponseEntity<>("No borrado", HttpStatus.BAD_REQUEST);
 	}
 }

@@ -15,10 +15,10 @@ public class Tarifa {
 	private int idTarifa;
 	
 	@Column
-	private int tarifaRegular;
+	private float tarifaRegular;
 	
 	@Column
-	private int tarifaPausa;
+	private float tarifaPausa;
 	
 	@Column
 	private LocalDate fecha;
@@ -40,19 +40,19 @@ public class Tarifa {
 		this.idTarifa = idTarifa;
 	}
 
-	public int getTarifaRegular() {
+	public float getTarifaRegular() {
 		return tarifaRegular;
 	}
 
-	public void setTarifaRegular(int tarifaRegular) {
+	public void setTarifaRegular(float tarifaRegular) {
 		this.tarifaRegular = tarifaRegular;
 	}
 
-	public int getTarifaPausa() {
+	public float getTarifaPausa() {
 		return tarifaPausa;
 	}
 
-	public void setTarifaPausa(int tarifaPausa) {
+	public void setTarifaPausa(float tarifaPausa) {
 		this.tarifaPausa = tarifaPausa;
 	}
 

@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.model.Administrador;
-import com.example.demo.repository.AdministradorRepository;
 import com.example.demo.services.AdministradorServicio;
 
 @RestController
@@ -32,18 +31,18 @@ public class AdministradorController {
 	}
 
 	@GetMapping("/")
-	public List<Administrador> getListaAdmins() {
-		return administradorServicio.obtenerListaAdmins();
+	public List<Administrador> getListaAdministradores() {
+		return administradorServicio.findAll();
 	}
 
 	@PostMapping(value = "/agregar", headers = "content-type=application/json")
 	public Administrador agregar(@RequestBody Administrador admin) {
-		return administradorServicio.agregarAdmin(admin);
+		return administradorServicio.save(admin);
 	}
 
 	@DeleteMapping(value = "/borrar/{id}")
 	public ResponseEntity<String> borrar(@PathVariable int id) {
-		if (administradorServicio.borrar(id)) {
+		if (administradorServicio.delete(id)) {
 			return new ResponseEntity<>("Borrado", HttpStatus.OK);
 		} else
 			return new ResponseEntity<>("No borrado", HttpStatus.BAD_REQUEST);

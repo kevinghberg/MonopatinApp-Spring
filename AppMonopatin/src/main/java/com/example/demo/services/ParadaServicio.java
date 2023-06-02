@@ -1,12 +1,13 @@
 package com.example.demo.services;
 
-import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.dtos.ParadaMonopatinDto;
 import com.example.demo.model.Localidad;
+import com.example.demo.model.Monopatin;
 import com.example.demo.model.Parada;
 import com.example.demo.repository.MonopatinRepository;
 import com.example.demo.repository.ParadaRepository;
@@ -19,12 +20,10 @@ public class ParadaServicio {
 
 	public ParadaServicio(@Qualifier("paradaRepository") ParadaRepository paradaRepository,
 			@Qualifier("monopatinRepository") MonopatinRepository monopatinRepository) {
-		this.monopatinRepository = monopatinRepository;
 		this.paradaRepository = paradaRepository;
 	}
 
 	public List<Parada> findAll() {
-
 		return paradaRepository.findAll();
 	}
 
@@ -36,9 +35,24 @@ public class ParadaServicio {
 		return paradaRepository.findById(idParada);
 	}
 
-	public void delete(Parada parada) {
-		// TODO Auto-generated method stub
+	public boolean delete(int id) {
+		Parada parada = paradaRepository.findById(id);
+		if (parada != null) {
+			paradaRepository.delete(parada);
+			return true;
+		} else
+			return false;
+	}
 
+	public Parada agregarRelacionMonopatin(ParadaMonopatinDto relacion) {
+		Parada parada = paradaRepository.findById(relacion.getIdParada());
+		Monopatin monopatin = monopatinRepository.findByIdMonopatin(relacion.getIdMonopatin());
+		if (parada != null && monopatin != null) {
+			parada.getListaMonopatines().add(monopatin);
+			return parada;
+		} else {
+			return null;
+		}
 	}
 
 	public List<Parada> obtenerParadasCercanas(Double longitud, Double latitud, double distancia) {
