@@ -15,7 +15,7 @@ public class UsuarioServicio {
 
 	private UsuarioRepository usuarioRepository;
 
-	public UsuarioServicio(@Qualifier("repository") UsuarioRepository usuarioRepository) {
+	public UsuarioServicio(@Qualifier("usuarioRepository") UsuarioRepository usuarioRepository) {
 		this.usuarioRepository = usuarioRepository;
 	}
 

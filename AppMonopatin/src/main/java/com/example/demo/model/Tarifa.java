@@ -64,9 +64,4 @@ public class Tarifa {
 		this.fecha = fecha;
 	}
 	
-
-	
-	
-	
-
 }

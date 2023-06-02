@@ -1,5 +1,6 @@
 package com.example.demo.services;
 
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -64,18 +65,26 @@ public class ViajeServicio {
 	public Viaje reservarMonopatin(ViajeMonopatinUsuarioDto vmudto) {
 		Viaje viaje = new Viaje();
 		Usuario usuario = usuarioRepository.findByIdUsuario(vmudto.getIdUsuario());
+		System.out.println(usuario);
 		Monopatin monopatin = monopatinRepository.findByIdMonopatin(vmudto.getIdMonopatin());
+		System.out.println(monopatin);
+
 		Parada paradaComienzo = paradaRepository.findById(vmudto.getIdParadaComienzo());
+		System.out.println(paradaComienzo);
+
 		Parada paradaDestino = paradaRepository.findById(vmudto.getIdParadaDestino());
+		System.out.println(paradaDestino);
+
+		Tarifa tarifaActual = tarifaRepository.findTopByOrderByIdTarifaDesc();
+		System.out.println(tarifaActual);
 		if (usuario != null && monopatin != null && paradaComienzo != null && paradaDestino != null) {
 			double distancia = new Localidad(paradaComienzo.getLatitud(), paradaComienzo.getLongitud())
 					.distanceTo(new Localidad(paradaDestino.getLatitud(), paradaDestino.getLongitud()));
 			viaje.setMonopatin(monopatin);
 			viaje.setUsuario(usuario);
-			viaje.setPrecioEstimado(distancia*1);
-			//TODO ESTIMAR PRECIO
+			viaje.setPrecioEstimado(Math.floor(distancia * tarifaActual.getTarifaRegular() * 100) / 100);
 			viaje.setFechaInicio(LocalDate.now());
-			return (viajeRepository.save(viaje));
+			return viajeRepository.save(viaje);
 		} else
 			return null;
 	}

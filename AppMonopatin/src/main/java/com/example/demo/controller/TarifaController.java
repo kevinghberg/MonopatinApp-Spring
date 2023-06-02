@@ -41,6 +41,11 @@ public class TarifaController {
 	public Tarifa agregar(@RequestBody Tarifa tarifa) {
 		return tarifaServicio.save(tarifa);
 	}
+	
+	@GetMapping(value = "/ultima")
+	public Tarifa obtenerUltimaTarifa() {
+		return tarifaServicio.obtenerUltimaTarifa();
+	}
 
 	@GetMapping(value = "/valorregular")
 	public float obtenerTarifaRegular() {

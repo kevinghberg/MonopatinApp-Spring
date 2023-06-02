@@ -1,5 +1,6 @@
 package com.example.demo.services;
 
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 
@@ -24,6 +25,7 @@ public class TarifaServicio {
 	}
 
 	public Tarifa save(Tarifa tarifa) {
+		tarifa.setFecha(LocalDate.now());
 		return tarifaRepository.save(tarifa);
 	}
 
@@ -38,6 +40,10 @@ public class TarifaServicio {
 			return true;
 		} else
 			return false;
+	}
+	
+	public Tarifa obtenerUltimaTarifa() {
+		return tarifaRepository.findTopByOrderByIdTarifaDesc();
 	}
 
 	public float obtenerTarifaRegular() {

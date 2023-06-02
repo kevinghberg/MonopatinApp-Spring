@@ -28,7 +28,7 @@ public class MonopatinController {
 
 	private MonopatinServicio monopatinServicio;
 
-	public MonopatinController(@Qualifier("monopatinRepository") MonopatinServicio monopatin) {
+	public MonopatinController(@Qualifier("monopatinServicio") MonopatinServicio monopatin) {
 		this.monopatinServicio = monopatin;
 	}
 
