@@ -19,4 +19,9 @@ public class UsuarioServicio {
 		return repository.findByIdUsuario(idUsuario);
 	}
 
+	public Usuario findByIdUsuario(int idUsuario) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
