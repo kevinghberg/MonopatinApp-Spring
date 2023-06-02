@@ -15,61 +15,62 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.demo.dtos.MonopatinMantenimientoDto;
+import com.example.demo.dtos.MonopatinEstadoDto;
 import com.example.demo.model.Monopatin;
-import com.example.demo.repository.MonopatinRepository;
+import com.example.demo.services.MonopatinServicio;
 
 @RestController
 @RequestMapping("monopatines")
 public class MonopatinController {
 
-	@Qualifier("monopatinRepository")
+	@Qualifier("monopatinServicio")
 	@Autowired
 
-	private MonopatinRepository repository;
+	private MonopatinServicio monopatinServicio;
 
-	public MonopatinController(@Qualifier("monopatinRepository") MonopatinRepository monopatin) {
-		this.repository = monopatin;
+	public MonopatinController(@Qualifier("monopatinRepository") MonopatinServicio monopatin) {
+		this.monopatinServicio = monopatin;
 	}
 
 	@GetMapping("/")
 	public List<Monopatin> getMonopatines() {
-		return repository.findAll();
+		return monopatinServicio.findAll();
 	}
 
 	@PostMapping(value = "/agregar", headers = "content-type=application/json")
 	public Monopatin agregarMonopatin(@RequestBody Monopatin monopatin) {
-		return repository.save(monopatin);
+		return monopatinServicio.save(monopatin);
 	}
 
 	@GetMapping("/obtener/{patente}")
 	public Monopatin findByPatente(@PathVariable String patente) {
-		return repository.findByPatente(patente);
+		return monopatinServicio.findByPatente(patente);
 	}
 
 	@DeleteMapping(value = "/borrar/{id}")
-	public ResponseEntity<Monopatin> borrar(@PathVariable int id) {
-		Monopatin monopatin = repository.findByIdMonopatin(id);
-		System.out.println(monopatin);
-		if (monopatin != null) {
-			repository.delete(monopatin);
-			return new ResponseEntity<>(monopatin, HttpStatus.OK);
-		} else
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+	public ResponseEntity<String> borrar(@PathVariable int id) {
+		if (monopatinServicio.delete(id))
+			return new ResponseEntity<>("Borrado id: " + id, HttpStatus.OK);
+		else
+			return new ResponseEntity<>("No borrado", HttpStatus.BAD_REQUEST);
 	}
 
 	@PutMapping("/mantenimiento")
-	public ResponseEntity<Monopatin> actualizarMantenimiento(@RequestBody MonopatinMantenimientoDto mmdto) {
-		Monopatin monopatin = repository.findByIdMonopatin(mmdto.getId());
-		if (monopatin != null) {
-			if (mmdto.getEstadoMantenimiento() == 1)
-				monopatin.setEstadoMantenimiento(true);
-			else
-				monopatin.setEstadoMantenimiento(false);
-			return new ResponseEntity<>(repository.save(monopatin), HttpStatus.OK);
-		} else {
+	public ResponseEntity<Monopatin> actualizarMantenimiento(@RequestBody MonopatinEstadoDto mmdto) {
+		Monopatin monopatin = monopatinServicio.actualizarEstadoMantenimiento(mmdto);
+		if (monopatin != null)
+			return new ResponseEntity<>(monopatin, HttpStatus.OK);
+		else
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-		}
+	}
+
+	@PutMapping("/enuso")
+	public ResponseEntity<Monopatin> actualizarEstadoEnUso(@RequestBody MonopatinEstadoDto mmdto) {
+		Monopatin monopatin = monopatinServicio.actualizarEstadoEnUso(mmdto);
+		if (monopatin != null)
+			return new ResponseEntity<>(monopatin, HttpStatus.OK);
+		else
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 	}
 
 }

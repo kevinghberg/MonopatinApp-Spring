@@ -1,6 +1,5 @@
 package com.example.demo.controller;
 
-import java.time.LocalDate;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -16,8 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.dtos.RelacionUsuarioMPDto;
 import com.example.demo.model.CuentaMercadoPago;
-import com.example.demo.model.Usuario;
-import com.example.demo.services.UsuarioServicio;
 import com.example.demo.services.CuentaMercadoPagoServicio;
 
 @RestController
@@ -28,12 +25,9 @@ public class CuentaMercadoPagoController {
 	@Autowired
 
 	private CuentaMercadoPagoServicio cuentaMercadoPagoServicio;
-	private UsuarioServicio usuarioServicio;
 
 	public CuentaMercadoPagoController(
-			@Qualifier("cuentaMercadoPagoServicio") CuentaMercadoPagoServicio cuentaMercadoPagoServicio,
-			@Qualifier("usuarioServicio") UsuarioServicio usuarioServicio) {
-		this.usuarioServicio = usuarioServicio;
+			@Qualifier("cuentaMercadoPagoServicio") CuentaMercadoPagoServicio cuentaMercadoPagoServicio) {
 		this.cuentaMercadoPagoServicio = cuentaMercadoPagoServicio;
 	}
 
