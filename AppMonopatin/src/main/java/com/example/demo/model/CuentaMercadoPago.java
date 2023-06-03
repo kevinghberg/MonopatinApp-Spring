@@ -22,18 +22,18 @@ public class CuentaMercadoPago {
 	@Column
 	private LocalDate fechaAlta;
 	
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "usuario_id")
-	private Set<Usuario> listaUsuario;
+	private List<Usuario> listaUsuario;
 
 	public CuentaMercadoPago() {
 	}
 
-	public Set<Usuario> getListaUsuario() {
+	public List<Usuario> getListaUsuario() {
 		return listaUsuario;
 	}
 
-	public void setListaUsuario(Set<Usuario> listaUsuario) {
+	public void setListaUsuario(List<Usuario> listaUsuario) {
 		this.listaUsuario = listaUsuario;
 	}
 

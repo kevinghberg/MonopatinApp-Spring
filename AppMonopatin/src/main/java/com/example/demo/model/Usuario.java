@@ -1,7 +1,6 @@
 package com.example.demo.model;
 
-import java.util.List;
-import java.util.Set;
+
 
 import javax.persistence.*;
 import lombok.Data;
@@ -16,10 +15,10 @@ public class Usuario {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int idUsuario;
 	
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "usuario")
+    @OneToOne(fetch = FetchType.EAGER, mappedBy = "usuario")
     private Viaje viaje;
     
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     private CuentaMercadoPago cuentamp;
 
 	@Column

@@ -17,7 +17,7 @@ public class Monopatin {
 	@OneToOne(fetch = FetchType.LAZY, mappedBy = "monopatin")
 	private Viaje viaje;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	private Parada parada;
 
 	@Column

@@ -8,27 +8,28 @@ import lombok.Data;
 
 @Entity
 @Data
+@Table(name = "viaje")
 public class Viaje {
 
 	@Id
 	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int idViaje;
+	private int id;
 
-	@OneToOne(fetch = FetchType.LAZY)
+	@OneToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "usuario_id")
 	private Usuario usuario;
 
-	@OneToOne(fetch = FetchType.LAZY)
+	@OneToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "monopatin_id")
 	private Monopatin monopatin;
 	
-	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "parada_id")
+	@OneToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "parada_inicio_id")
 	private Parada paradaInicio;
 	
-	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "parada_id")
+	@OneToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "parada_destino_id")
 	private Parada paradaDestino;
 	
 	public Parada getParadaInicio() {
@@ -100,11 +101,11 @@ public class Viaje {
 	}
 
 	public int getIdViaje() {
-		return idViaje;
+		return id;
 	}
 
-	public void setIdViaje(int idViaje) {
-		this.idViaje = idViaje;
+	public void setIdViaje(int id) {
+		this.id = id;
 	}
 
 	public Monopatin getMonopatin() {
@@ -197,7 +198,7 @@ public class Viaje {
 
 	@Override
 	public String toString() {
-		return "Viaje [id:" + idViaje + ", usuario:" + usuario.getIdUsuario() + ", monopatin:" + monopatin.getPatente()
+		return "Viaje [id:" + id + ", usuario:" + usuario.getIdUsuario() + ", monopatin:" + monopatin.getPatente()
 				+ ", fechaInicio:" + fechaInicio + ", fechaFin:" + fechaFin + ", kmRecorridos:" 
 				+ ", estadoPausa:" + estadoPausa + ", precioFinal:" + precioFinal + ", precioEstimado:" + precioEstimado
 				+ ", precioRecorridoActual:" + precioRecorridoActual + ", tiempoPausa:" + tiempoPausa + "]";

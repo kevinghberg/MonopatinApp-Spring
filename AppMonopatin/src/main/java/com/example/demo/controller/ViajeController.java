@@ -40,24 +40,26 @@ public class ViajeController {
 		return viajeServicio.save(viaje);
 	}
 
-	@PostMapping(value = "/registrarViaje", headers = "content-type=application/json")
-	public ResponseEntity<String> registrarViaje(@RequestBody ViajeMonopatinUsuarioDto vmudto) {
+	@PostMapping(value = "/registrarviaje", headers = "content-type=application/json")
+	public ResponseEntity<Viaje> registrarViaje(@RequestBody ViajeMonopatinUsuarioDto vmudto) {
 		Viaje viaje = viajeServicio.registrarViaje(vmudto);
 		paradaServicio.agregarRelacionMonopatin(
 				new ParadaMonopatinDto(vmudto.getIdMonopatin(), vmudto.getIdParadaComienzo()));
 		if (viaje != null) {
-			return new ResponseEntity<>(viaje.toString(), HttpStatus.OK);
+			return new ResponseEntity<>(viaje, HttpStatus.OK);
 		} else {
-			return new ResponseEntity<>("No reservado", HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 	}
-	
-	@PostMapping(value = "registrarLlegada",headers = "content-type=application/json")
-	public ResponseEntity<Viaje> registrarLlegada(@RequestBody int id){
-		double precioFinal = viajeServicio.registrarLlegada(id);
-		
-		return null;
-		
+
+	@PutMapping(value = "registrarllegada/{id}")
+	public ResponseEntity<Viaje> registrarLlegada(@PathVariable int id) {
+		Viaje viaje = viajeServicio.registrarLlegada(id);
+		if (viaje != null) {
+			return new ResponseEntity<>(viaje, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
 	}
 
 	@DeleteMapping(value = "/borrar/{id}")

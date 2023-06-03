@@ -46,7 +46,7 @@ public class ParadaController {
 	public ResponseEntity<Parada> agregarRelacionMonopatin(@RequestBody ParadaMonopatinDto relacion) {
 		Parada parada = paradaServicio.agregarRelacionMonopatin(relacion);
 		if (parada != null)
-			return new ResponseEntity<>(HttpStatus.OK);
+			return new ResponseEntity<>(parada, HttpStatus.OK);
 		else
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 	}
@@ -59,7 +59,7 @@ public class ParadaController {
 			return new ResponseEntity<>("No borrado", HttpStatus.BAD_REQUEST);
 	}
 
-	@GetMapping(value = "/diferencia/{latitud}/{longitud}/{distancia}")
+	@GetMapping(value = "/cercanas/{latitud}/{longitud}/{distancia}")
 	public List<Parada> obtenerCercanas(@PathVariable Double latitud, @PathVariable Double longitud,
 			@PathVariable double distancia) {
 		return paradaServicio.obtenerParadasCercanas(longitud, latitud, distancia);

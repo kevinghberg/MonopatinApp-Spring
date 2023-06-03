@@ -8,20 +8,21 @@ import lombok.Data;
 
 @Entity
 @Data
+@Table(name = "parada")
 public class Parada {
 	
 	@Id
+    @Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	
-	
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "monopatin_id")
 	private Set<Monopatin> listaMonopatin;
     
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "viaje")
+    @OneToOne(fetch = FetchType.EAGER)
     private Viaje viaje;
-	
+    
 	@Column
 	private double latitud;
 	

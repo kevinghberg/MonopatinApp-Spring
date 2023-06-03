@@ -42,11 +42,12 @@ public class CuentaMercadoPagoController {
 	}
 
 	@PostMapping(value = "/relacion", headers = "content-type=application/json")
-	public ResponseEntity<String> agregarRelacion(@RequestBody RelacionUsuarioMPDto relacion) {
-		if (cuentaMercadoPagoServicio.agregarRelacionUsuario(relacion) != null) {
-			return new ResponseEntity<>("Agregado", HttpStatus.OK);
+	public ResponseEntity<CuentaMercadoPago> agregarRelacion(@RequestBody RelacionUsuarioMPDto relacion) {
+		CuentaMercadoPago cuenta = cuentaMercadoPagoServicio.agregarRelacionUsuario(relacion);
+		if (cuenta != null) {
+			return new ResponseEntity<>(cuenta, HttpStatus.OK);
 		} else
-			return new ResponseEntity<>("Error en la carga", HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 	}
 
 	@DeleteMapping(value = "/borrar/{id}")

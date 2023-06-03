@@ -21,6 +21,7 @@ public class ParadaServicio {
 	public ParadaServicio(@Qualifier("paradaRepository") ParadaRepository paradaRepository,
 			@Qualifier("monopatinRepository") MonopatinRepository monopatinRepository) {
 		this.paradaRepository = paradaRepository;
+		this.monopatinRepository = monopatinRepository;
 	}
 
 	public List<Parada> findAll() {
