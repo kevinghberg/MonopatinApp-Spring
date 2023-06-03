@@ -47,10 +47,11 @@ public class MonopatinServicio {
 	public Monopatin actualizarEstadoEnUso(MonopatinEstadoDto mmdto) {
 		Monopatin monopatin = monopatinRepository.findByIdMonopatin(mmdto.getId());
 		if (monopatin != null) {
-			if (mmdto.getEstado() == 1) {
+			if (mmdto.getEstado() == 1)
 				monopatin.setEnUso(true);
-			} else
+			else
 				monopatin.setEnUso(false);
+			monopatinRepository.save(monopatin);
 			return monopatin;
 		}
 		return null;
@@ -59,10 +60,11 @@ public class MonopatinServicio {
 	public Monopatin actualizarEstadoMantenimiento(MonopatinEstadoDto mmdto) {
 		Monopatin monopatin = monopatinRepository.findByIdMonopatin(mmdto.getId());
 		if (monopatin != null) {
-			if (mmdto.getEstado() == 1) {
+			if (mmdto.getEstado() == 1)
 				monopatin.setEstadoMantenimiento(false);
-			} else
+			else
 				monopatin.setEstadoMantenimiento(false);
+			monopatinRepository.save(monopatin);
 			return monopatin;
 		}
 		return null;

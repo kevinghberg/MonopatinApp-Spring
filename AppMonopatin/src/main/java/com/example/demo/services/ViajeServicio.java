@@ -32,7 +32,8 @@ public class ViajeServicio {
 	private ParadaRepository paradaRepository;
 	private TarifaRepository tarifaRepository;
 	private CuentaMercadoPagoRepository cuentaMercadoPagoRepository;
-	private static final int VELOCIDAD = 20;
+	private static final int TIEMPO_LIMITE_PAUSA = 15;
+	private static final int VELOCIDAD_POR_HORA = 20;
 
 	public ViajeServicio(@Qualifier("viajeRepository") ViajeRepository viajeRepository,
 			@Qualifier("usuarioRepository") UsuarioRepository usuarioRepository,
@@ -75,29 +76,32 @@ public class ViajeServicio {
 		Monopatin monopatin = monopatinRepository.findByIdMonopatin(vmudto.getIdMonopatin());
 		Parada paradaComienzo = paradaRepository.findById(vmudto.getIdParadaComienzo());
 		Parada paradaDestino = paradaRepository.findById(vmudto.getIdParadaDestino());
+		if (paradaComienzo.getIdParada() == paradaDestino.getIdParada()) {
+			return null;
+		}
 		Tarifa tarifaActual = tarifaRepository.findTopByOrderByIdTarifaDesc();
-		/*
-		 * List<CuentaMercadoPago> cuentasMP = cuentaMercadoPagoRepository.findAll();
-		 * CuentaMercadoPago cuenta = obtenerCuentaMayorSaldo(usuario, cuentasMP);
-		 * System.out.println("cuenta:"+cuenta);
-		 */
+		List<CuentaMercadoPago> cuentasMP = cuentaMercadoPagoRepository.findAll();
+		CuentaMercadoPago cuenta = obtenerCuentaMayorSaldo(usuario, cuentasMP);
 		if (usuario != null && paradaComienzo != null && paradaDestino != null && tarifaActual != null
-		/* && cuenta != null */) {
+				&& cuenta != null) {
 			if (monopatin != null && !monopatin.isEnUso() && !monopatin.isEstadoMantenimiento()) {
 				double distancia = new Localidad(paradaComienzo.getLatitud(), paradaComienzo.getLongitud())
 						.haversine(new Localidad(paradaDestino.getLatitud(), paradaDestino.getLongitud()));
 				double precioEstimado = (Math.floor(distancia * tarifaActual.getTarifaRegular() * 100) / 100);
-				/* if (cuenta.getSaldo() > precioEstimado) { */
-				viaje.setMonopatin(monopatin);
-				monopatin.setEnUso(true);
-				viaje.setUsuario(usuario);
-				viaje.setParadaInicio(paradaComienzo);
-				viaje.setParadaDestino(paradaDestino);
-				viaje.setFechaInicio(LocalDate.now());
-				viaje.setDistanciaEstimada(distancia);
-				viaje.setPrecioEstimado(precioEstimado);
-				return viajeRepository.save(viaje);
-
+				if (cuenta.getSaldo() > precioEstimado) {
+					viaje.setMonopatin(monopatin);
+					monopatin.setEnUso(true);
+					viaje.setUsuario(usuario);
+					viaje.setParadaInicio(paradaComienzo);
+					viaje.setParadaDestino(paradaDestino);
+					viaje.setFechaInicio(LocalDate.now());
+					viaje.setDistanciaEstimada(distancia);
+					viaje.setPrecioEstimado(precioEstimado);
+					viaje.setTarifaRegular(tarifaActual.getTarifaRegular());
+					viaje.setTarifaPausa(tarifaActual.getTarifaPausa());
+					monopatinRepository.save(monopatin);
+					return viajeRepository.save(viaje);
+				}
 			}
 			return null;
 		}
@@ -105,19 +109,25 @@ public class ViajeServicio {
 
 	}
 
-	public void registrarAvanceMonopatin(int id, int kilometros) {
+	public void registrarDesvio(int id, int kilometros) {
 		Viaje viaje = viajeRepository.findById(id);
 		if (viaje != null) {
-			viaje.setDistanciaRecorrida(kilometros + viaje.getDistanciaRecorrida());
+			viaje.setDistanciaDesvio(viaje.getDistanciaDesvio() + kilometros);
 			viajeRepository.save(viaje);
 		}
+	}
 
+	public void agregarTiempoPausa(int id, int tiempoPausa) {
+		Viaje viaje = viajeRepository.findById(id);
+		if (viaje != null) {
+			viaje.setTiempoPausa(tiempoPausa + viaje.getTiempoPausa());
+			viajeRepository.save(viaje);
+		}
 	}
 
 	public CuentaMercadoPago obtenerCuentaMayorSaldo(Usuario usuario, List<CuentaMercadoPago> cuentasMP) {
 		if (cuentasMP.size() > 0) {
 			CuentaMercadoPago mayor = new CuentaMercadoPago(0);
-			System.out.println(cuentasMP.get(0).getListaUsuario());
 			for (CuentaMercadoPago cuenta : cuentasMP) {
 				if (cuenta.getListaUsuario().size() > 0) {
 					for (Usuario user : cuenta.getListaUsuario()) {
@@ -136,38 +146,40 @@ public class ViajeServicio {
 			return null;
 	}
 
-	public List<Viaje> findAll() {
-		return viajeRepository.findAll();
-	}
-
 	public Viaje registrarLlegada(int id) {
 		Viaje viaje = viajeRepository.findById(id);
-		System.out.println(viaje);
 		if (viaje != null) {
 			Monopatin monopatin = monopatinRepository.findByIdMonopatin(viaje.getMonopatin().getIdMonopatin());
 			monopatin.setEnUso(false);
 			Parada paradaInicio = paradaRepository.findById(viaje.getParadaInicio().getIdParada());
 			Parada paradaFinal = paradaRepository.findById(viaje.getParadaDestino().getIdParada());
-			if (paradaInicio.getListaMonopatines().contains(monopatin)) 
-				paradaInicio.getListaMonopatines().remove(monopatin);
+			paradaInicio.getListaMonopatines().remove(monopatin);
 			paradaFinal.getListaMonopatines().add(monopatin);
-			if (viaje.getDistanciaRecorrida() == 0) {
-				monopatin.setKilometrosRecorridos(viaje.getDistanciaEstimada());
-				monopatin.setTiempoUso(viaje.getDistanciaEstimada() / VELOCIDAD);
-				double estimadoxestimado = viaje.getPrecioEstimado() * viaje.getDistanciaEstimada();
-				System.out.println(estimadoxestimado);
-				viaje.setPrecioFinal(estimadoxestimado);
-			} else {
-				monopatin.setKilometrosRecorridos(viaje.getDistanciaRecorrida());
-				monopatin.setTiempoUso(viaje.getDistanciaRecorrida() / VELOCIDAD);
-				double estimadoxrecorrido = viaje.getPrecioEstimado() * viaje.getDistanciaRecorrida();
-				System.out.println(estimadoxrecorrido);
-				viaje.setPrecioFinal(estimadoxrecorrido);
-			}
+			double distanciaFinal = viaje.getDistanciaDesvio() + viaje.getDistanciaEstimada();
+			monopatin.setKilometrosRecorridos(distanciaFinal + monopatin.getKilometrosRecorridos());
+			monopatin.setTiempoUso(distanciaFinal / VELOCIDAD_POR_HORA);
+			if (viaje.getTiempoPausa() < TIEMPO_LIMITE_PAUSA)
+				viaje.setPrecioFinal(viaje.getTarifaRegular() * distanciaFinal);
+			else
+				viaje.setPrecioFinal(viaje.getTarifaPausa() * distanciaFinal);
 			viaje.setFechaFin(LocalDate.now());
+			debitarDinero(viaje.getUsuario(), viaje.getPrecioFinal());
+			paradaRepository.save(paradaInicio);
+			monopatinRepository.save(monopatin);
+			paradaRepository.save(paradaFinal);
 			return viajeRepository.save(viaje);
 		}
 		return null;
 	}
 
+	private void debitarDinero(Usuario usuario, double dineroADebitar) {
+		List<CuentaMercadoPago> cuentasMP = cuentaMercadoPagoRepository.findAll();
+		CuentaMercadoPago cuenta = obtenerCuentaMayorSaldo(usuario, cuentasMP);
+		cuenta.setSaldo(cuenta.getSaldo() - dineroADebitar);
+		cuentaMercadoPagoRepository.save(cuenta);
+	}
+
+	public List<Viaje> findAll() {
+		return viajeRepository.findAll();
+	}
 }

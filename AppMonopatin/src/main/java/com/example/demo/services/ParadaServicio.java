@@ -56,6 +56,7 @@ public class ParadaServicio {
 		}
 		if (parada != null && monopatin != null) {
 			parada.getListaMonopatines().add(monopatin);
+			monopatinRepository.save(monopatin);
 			return parada;
 		} else {
 			return null;

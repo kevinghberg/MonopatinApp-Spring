@@ -44,17 +44,17 @@ public class TarifaController {
 	
 	@GetMapping(value = "/ultima")
 	public Tarifa obtenerUltimaTarifa() {
-		return tarifaServicio.obtenerUltimaTarifa();
+		return tarifaServicio.findTopByOrderByIdTarifaDesc();
 	}
 
 	@GetMapping(value = "/valorregular")
 	public float obtenerTarifaRegular() {
-		return tarifaServicio.obtenerTarifaRegular();
+		return tarifaServicio.findTopByOrderByIdTarifaDesc().getTarifaRegular();
 	}
 
 	@GetMapping(value = "/valorpausa")
 	public float obtenerTarifaPausa() {
-		return tarifaServicio.obtenerTarifaPausa();
+		return tarifaServicio.findTopByOrderByIdTarifaDesc().getTarifaPausa();
 	}
 
 	@DeleteMapping(value = "/borrar/{id}")

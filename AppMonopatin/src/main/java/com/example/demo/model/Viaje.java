@@ -31,22 +31,6 @@ public class Viaje {
 	@OneToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "parada_destino_id")
 	private Parada paradaDestino;
-	
-	public Parada getParadaInicio() {
-		return paradaInicio;
-	}
-
-	public void setParadaInicio(Parada paradaInicio) {
-		this.paradaInicio = paradaInicio;
-	}
-
-	public Parada getParadaDestino() {
-		return paradaDestino;
-	}
-
-	public void setParadaDestino(Parada paradaDestino) {
-		this.paradaDestino = paradaDestino;
-	}
 
 	@Column
 	private LocalDate fechaInicio;
@@ -58,42 +42,24 @@ public class Viaje {
 	private double distanciaEstimada;
 	
 	@Column
-	private double distanciaRecorrida;
-
-	@Column
-	private boolean estadoPausa;
+	private double distanciaDesvio;
 
 	@Column
 	private double precioFinal;
 
 	@Column
 	private double precioEstimado;
-
+	
 	@Column
-	private double precioRecorridoActual;
+	private double tarifaPausa;
+	
+	@Column
+	private double tarifaRegular;
 
 	@Column
 	private int tiempoPausa;
 	
-	
-
 	public Viaje() {
-	}
-
-	public Viaje(Monopatin monopatin, Usuario usuario, LocalDate fechaInicio, LocalDate fechaFin, double distanciaRecorrida,
-			double distanciaEstimada, boolean estadoPausa, long precioFinal, long precioEstimado, long precioRecorridoActual,
-			int tiempoPausa) {
-		this.monopatin = monopatin;
-		this.usuario = usuario;
-		this.fechaInicio = fechaInicio;
-		this.fechaFin = fechaFin;
-		this.distanciaRecorrida = distanciaRecorrida;
-		this.distanciaEstimada = distanciaEstimada;
-		this.estadoPausa = estadoPausa;
-		this.precioFinal = precioFinal;
-		this.precioEstimado = precioEstimado;
-		this.precioRecorridoActual = precioRecorridoActual;
-		this.tiempoPausa = tiempoPausa;
 	}
 
 	public Viaje(Monopatin monopatin) {
@@ -132,12 +98,12 @@ public class Viaje {
 		this.fechaFin = fechaFin;
 	}
 
-	public boolean isEstadoPausa() {
-		return estadoPausa;
+	public double getTarifaPausa() {
+		return tarifaPausa;
 	}
 
-	public void setEstadoPausa(boolean estadoPausa) {
-		this.estadoPausa = estadoPausa;
+	public void setTarifaPausa(double tarifaPausa) {
+		this.tarifaPausa = tarifaPausa;
 	}
 
 	public double getPrecioFinal() {
@@ -154,14 +120,6 @@ public class Viaje {
 
 	public void setPrecioEstimado(double precioEstimado2) {
 		this.precioEstimado = precioEstimado2;
-	}
-
-	public double getPrecioRecorridoActual() {
-		return precioRecorridoActual;
-	}
-
-	public void setPrecioRecorridoActual(double precioRecorridoActual) {
-		this.precioRecorridoActual = precioRecorridoActual;
 	}
 
 	public int getTiempoPausa() {
@@ -188,20 +146,40 @@ public class Viaje {
 		this.distanciaEstimada = distanciaEstimada;
 	}
 
-	public double getDistanciaRecorrida() {
-		return distanciaRecorrida;
+	public double getDistanciaDesvio() {
+		return distanciaDesvio;
+	}
+	
+	public void setDistanciaDesvio(double distanciaDesvio) {
+		this.distanciaDesvio = distanciaDesvio;
+	}
+	
+	public double getTarifaRegular() {
+		return tarifaRegular;
 	}
 
-	public void setDistanciaRecorrida(double distanciaRecorrida) {
-		this.distanciaRecorrida = distanciaRecorrida;
+	public void setTarifaRegular(double tarifaRegular) {
+		this.tarifaRegular = tarifaRegular;
 	}
 
-	@Override
-	public String toString() {
-		return "Viaje [id:" + id + ", usuario:" + usuario.getIdUsuario() + ", monopatin:" + monopatin.getPatente()
-				+ ", fechaInicio:" + fechaInicio + ", fechaFin:" + fechaFin + ", kmRecorridos:" 
-				+ ", estadoPausa:" + estadoPausa + ", precioFinal:" + precioFinal + ", precioEstimado:" + precioEstimado
-				+ ", precioRecorridoActual:" + precioRecorridoActual + ", tiempoPausa:" + tiempoPausa + "]";
+	public int getId() {
+		return id;
+	}
+	
+	public Parada getParadaInicio() {
+		return paradaInicio;
+	}
+
+	public void setParadaInicio(Parada paradaInicio) {
+		this.paradaInicio = paradaInicio;
+	}
+
+	public Parada getParadaDestino() {
+		return paradaDestino;
+	}
+
+	public void setParadaDestino(Parada paradaDestino) {
+		this.paradaDestino = paradaDestino;
 	}
 
 }

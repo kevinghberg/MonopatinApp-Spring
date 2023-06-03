@@ -39,6 +39,7 @@ public class CuentaMercadoPagoServicio {
 		CuentaMercadoPago cuenta = cuentaMercadoPagoRepository.findById(relacion.getIdCuentaMP());
 		if (usuario != null && cuenta != null) {
 			cuenta.getListaUsuario().add(usuario);
+			cuentaMercadoPagoRepository.save(cuenta);
 			return cuenta;
 		} else {
 			return null;

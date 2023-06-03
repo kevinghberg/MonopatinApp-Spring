@@ -42,19 +42,8 @@ public class TarifaServicio {
 			return false;
 	}
 	
-	public Tarifa obtenerUltimaTarifa() {
+	public Tarifa findTopByOrderByIdTarifaDesc() {
 		return tarifaRepository.findTopByOrderByIdTarifaDesc();
 	}
-
-	public float obtenerTarifaRegular() {
-		List<Tarifa> tarifas = tarifaRepository.findAll();
-		Collections.sort(tarifas, (a, b) -> a.getFecha().compareTo(b.getFecha()));
-		return tarifas.get(0).getTarifaRegular();
-	}
-
-	public float obtenerTarifaPausa() {
-		List<Tarifa> tarifas = tarifaRepository.findAll();
-		Collections.sort(tarifas, (a, b) -> a.getFecha().compareTo(b.getFecha()));
-		return tarifas.get(0).getTarifaPausa();
-	}
+	
 }
