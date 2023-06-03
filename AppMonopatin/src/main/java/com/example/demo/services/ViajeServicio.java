@@ -2,18 +2,21 @@ package com.example.demo.services;
 
 import java.text.DecimalFormat;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.dtos.ViajeMonopatinUsuarioDto;
+import com.example.demo.model.CuentaMercadoPago;
 import com.example.demo.model.Localidad;
 import com.example.demo.model.Monopatin;
 import com.example.demo.model.Parada;
 import com.example.demo.model.Tarifa;
 import com.example.demo.model.Usuario;
 import com.example.demo.model.Viaje;
+import com.example.demo.repository.CuentaMercadoPagoRepository;
 import com.example.demo.repository.MonopatinRepository;
 import com.example.demo.repository.ParadaRepository;
 import com.example.demo.repository.TarifaRepository;
@@ -28,17 +31,21 @@ public class ViajeServicio {
 	private MonopatinRepository monopatinRepository;
 	private ParadaRepository paradaRepository;
 	private TarifaRepository tarifaRepository;
+	private CuentaMercadoPagoRepository cuentaMercadoPagoRepository;
+	private static final int VELOCIDAD = 20;
 
 	public ViajeServicio(@Qualifier("viajeRepository") ViajeRepository viajeRepository,
 			@Qualifier("usuarioRepository") UsuarioRepository usuarioRepository,
 			@Qualifier("monopatinRepository") MonopatinRepository monopatinRepository,
 			@Qualifier("paradaRepository") ParadaRepository paradaRepository,
-			@Qualifier("tarifaRepository") TarifaRepository tarifaRepository) {
+			@Qualifier("tarifaRepository") TarifaRepository tarifaRepository,
+			@Qualifier("cuentaMercadoPagoRepository") CuentaMercadoPagoRepository cuentaMercadoPagoRepository) {
 		this.monopatinRepository = monopatinRepository;
 		this.usuarioRepository = usuarioRepository;
 		this.viajeRepository = viajeRepository;
 		this.paradaRepository = paradaRepository;
 		this.tarifaRepository = tarifaRepository;
+		this.cuentaMercadoPagoRepository = cuentaMercadoPagoRepository;
 	}
 
 	public List<Viaje> getViajes() {
@@ -62,29 +69,91 @@ public class ViajeServicio {
 			return false;
 	}
 
-	public Viaje reservarMonopatin(ViajeMonopatinUsuarioDto vmudto) {
+	public Viaje registrarViaje(ViajeMonopatinUsuarioDto vmudto) {
 		Viaje viaje = new Viaje();
 		Usuario usuario = usuarioRepository.findByIdUsuario(vmudto.getIdUsuario());
-		System.out.println(usuario);
 		Monopatin monopatin = monopatinRepository.findByIdMonopatin(vmudto.getIdMonopatin());
-		System.out.println(monopatin);
-
 		Parada paradaComienzo = paradaRepository.findById(vmudto.getIdParadaComienzo());
-		System.out.println(paradaComienzo);
-
 		Parada paradaDestino = paradaRepository.findById(vmudto.getIdParadaDestino());
-		System.out.println(paradaDestino);
-
 		Tarifa tarifaActual = tarifaRepository.findTopByOrderByIdTarifaDesc();
-		System.out.println(tarifaActual);
-		if (usuario != null && monopatin != null && paradaComienzo != null && paradaDestino != null) {
-			double distancia = new Localidad(paradaComienzo.getLatitud(), paradaComienzo.getLongitud())
-					.distanceTo(new Localidad(paradaDestino.getLatitud(), paradaDestino.getLongitud()));
-			viaje.setMonopatin(monopatin);
-			viaje.setUsuario(usuario);
-			viaje.setPrecioEstimado(Math.floor(distancia * tarifaActual.getTarifaRegular() * 100) / 100);
-			viaje.setFechaInicio(LocalDate.now());
-			return viajeRepository.save(viaje);
+		List<CuentaMercadoPago> cuentasMP = cuentaMercadoPagoRepository.findAll();
+		CuentaMercadoPago cuenta = obtenerCuentaMayorSaldo(usuario, cuentasMP);
+		double distancia = new Localidad(paradaComienzo.getLatitud(), paradaComienzo.getLongitud())
+				.haversine(new Localidad(paradaDestino.getLatitud(), paradaDestino.getLongitud()));
+		double precioEstimado = (Math.floor(distancia * tarifaActual.getTarifaRegular() * 100) / 100);
+		if (usuario != null && paradaComienzo != null && paradaDestino != null && tarifaActual != null
+				&& cuenta != null) {
+			if (monopatin != null && !monopatin.isEnUso() && monopatin.isEstadoMantenimiento()) {
+				if (cuenta.getSaldo() > precioEstimado) {
+					viaje.setMonopatin(monopatin);
+					monopatin.setEnUso(true);
+					viaje.setUsuario(usuario);
+					viaje.setParadaInicio(paradaComienzo);
+					viaje.setParadaDestino(paradaDestino);
+					viaje.setFechaInicio(LocalDate.now());
+					viaje.setDistanciaEstimada(distancia);
+					viaje.setPrecioEstimado(precioEstimado);
+					return viajeRepository.save(viaje);
+				}
+			}
+			return null;
+		}
+		return null;
+	}
+
+	public double registrarLlegada(int id) {
+		double precio = 0;
+		Viaje viaje = viajeRepository.findByIdViaje(id);
+		if (viaje != null) {
+			Monopatin monopatin = monopatinRepository.findByIdMonopatin(viaje.getMonopatin().getIdMonopatin());
+			monopatin.setEnUso(false);
+			Parada paradaInicio = paradaRepository.findById(viaje.getParadaInicio().getIdParada());
+			Parada paradaFinal = paradaRepository.findById(viaje.getParadaDestino().getIdParada());
+			if (paradaInicio.getListaMonopatines().contains(monopatin))
+				paradaInicio.getListaMonopatines().remove(monopatin);
+			paradaFinal.getListaMonopatines().add(monopatin);
+			if (viaje.getDistanciaRecorrida() == 0) {
+				monopatin.setKilometrosRecorridos(viaje.getDistanciaEstimada());
+				monopatin.setTiempoUso(viaje.getDistanciaEstimada() / VELOCIDAD);
+				viaje.setPrecioFinal(viaje.getPrecioEstimado() * viaje.getDistanciaEstimada());
+			} else {
+				monopatin.setKilometrosRecorridos(viaje.getDistanciaRecorrida());
+				monopatin.setTiempoUso(viaje.getDistanciaRecorrida() / VELOCIDAD);
+				viaje.setPrecioFinal(viaje.getPrecioEstimado() * viaje.getDistanciaRecorrida());
+			}
+			precio = viaje.getPrecioFinal();
+			viaje.setFechaFin(LocalDate.now());
+		}
+		return precio;
+	}
+
+	public void registrarAvanceMonopatin(int id, int kilometros) {
+		Viaje viaje = viajeRepository.findByIdViaje(id);
+		if (viaje != null) {
+			viaje.setDistanciaRecorrida(kilometros + viaje.getDistanciaRecorrida());
+			viajeRepository.save(viaje);
+		}
+	}
+
+	public CuentaMercadoPago obtenerCuentaMayorSaldo(Usuario usuario, List<CuentaMercadoPago> cuentasMP) {
+		if (cuentasMP.size() > 0) {
+			CuentaMercadoPago mayor = new CuentaMercadoPago(0);
+			List<CuentaMercadoPago> result = new ArrayList<>(cuentasMP);
+			result.clear();
+			for (CuentaMercadoPago cuenta : cuentasMP) {
+				if (cuenta.getListaUsuario().size() > 0) {
+					for (Usuario user : cuenta.getListaUsuario()) {
+						if (user.getIdUsuario() == usuario.getIdUsuario()) {
+							if (cuenta.getSaldo() > mayor.getSaldo())
+								mayor = cuenta;
+						}
+					}
+				}
+			}
+			if (mayor.getSaldo() > 0)
+				return mayor;
+			else
+				return null;
 		} else
 			return null;
 	}

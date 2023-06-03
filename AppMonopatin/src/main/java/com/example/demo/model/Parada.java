@@ -18,6 +18,9 @@ public class Parada {
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "monopatin_id")
 	private Set<Monopatin> listaMonopatin;
+    
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "viaje")
+    private Viaje viaje;
 	
 	@Column
 	private double latitud;

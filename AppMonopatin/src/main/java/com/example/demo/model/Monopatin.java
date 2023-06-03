@@ -6,32 +6,35 @@ import lombok.Data;
 
 @Entity
 @Data
-@Table(name="monopatin")
+@Table(name = "monopatin")
 public class Monopatin {
 
 	@Id
-    @Column(name = "id")
+	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int idMonopatin;
-	
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "monopatin")
-    private Viaje viaje;
-    
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Parada parada;
-	
+
+	@OneToOne(fetch = FetchType.LAZY, mappedBy = "monopatin")
+	private Viaje viaje;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	private Parada parada;
+
 	@Column
 	private boolean enUso;
-	
+
 	@Column
 	private boolean estadoMantenimiento;
-	
+
 	@Column
-	private int tiempoUso;
-	
-	@Column(unique=true)
+	private double tiempoUso;
+
+	@Column
+	private double kilometrosRecorridos;
+
+	@Column(unique = true)
 	private String patente;
-	
+
 	public Monopatin() {
 	}
 
@@ -40,6 +43,7 @@ public class Monopatin {
 		this.enUso = false;
 		this.estadoMantenimiento = false;
 		this.tiempoUso = 0;
+		this.kilometrosRecorridos = 0;
 	}
 
 	public int getIdMonopatin() {
@@ -66,11 +70,11 @@ public class Monopatin {
 		this.estadoMantenimiento = estadoMantenimiento;
 	}
 
-	public int getTiempoUso() {
+	public double getTiempoUso() {
 		return tiempoUso;
 	}
 
-	public void setTiempoUso(int tiempoUso) {
+	public void setTiempoUso(double tiempoUso) {
 		this.tiempoUso = tiempoUso;
 	}
 
@@ -80,6 +84,14 @@ public class Monopatin {
 
 	public void setPatente(String patente) {
 		this.patente = patente;
+	}
+
+	public double getKilometrosRecorridos() {
+		return kilometrosRecorridos;
+	}
+
+	public void setKilometrosRecorridos(double kilometrosRecorridos) {
+		this.kilometrosRecorridos = kilometrosRecorridos;
 	}
 
 }

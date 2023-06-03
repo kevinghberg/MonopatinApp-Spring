@@ -22,6 +22,30 @@ public class Viaje {
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "monopatin_id")
 	private Monopatin monopatin;
+	
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "parada_id")
+	private Parada paradaInicio;
+	
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "parada_id")
+	private Parada paradaDestino;
+	
+	public Parada getParadaInicio() {
+		return paradaInicio;
+	}
+
+	public void setParadaInicio(Parada paradaInicio) {
+		this.paradaInicio = paradaInicio;
+	}
+
+	public Parada getParadaDestino() {
+		return paradaDestino;
+	}
+
+	public void setParadaDestino(Parada paradaDestino) {
+		this.paradaDestino = paradaDestino;
+	}
 
 	@Column
 	private LocalDate fechaInicio;
@@ -30,7 +54,10 @@ public class Viaje {
 	private LocalDate fechaFin;
 
 	@Column
-	private int kmRecorridos;
+	private double distanciaEstimada;
+	
+	@Column
+	private double distanciaRecorrida;
 
 	@Column
 	private boolean estadoPausa;
@@ -46,17 +73,21 @@ public class Viaje {
 
 	@Column
 	private int tiempoPausa;
+	
+	
 
 	public Viaje() {
 	}
 
-	public Viaje(Monopatin monopatin, Usuario usuario, LocalDate fechaInicio, LocalDate fechaFin, int kmRecorridos,
-			boolean estadoPausa, long precioFinal, long precioEstimado, long precioRecorridoActual, int tiempoPausa) {
+	public Viaje(Monopatin monopatin, Usuario usuario, LocalDate fechaInicio, LocalDate fechaFin, double distanciaRecorrida,
+			double distanciaEstimada, boolean estadoPausa, long precioFinal, long precioEstimado, long precioRecorridoActual,
+			int tiempoPausa) {
 		this.monopatin = monopatin;
 		this.usuario = usuario;
 		this.fechaInicio = fechaInicio;
 		this.fechaFin = fechaFin;
-		this.kmRecorridos = kmRecorridos;
+		this.distanciaRecorrida = distanciaRecorrida;
+		this.distanciaEstimada = distanciaEstimada;
 		this.estadoPausa = estadoPausa;
 		this.precioFinal = precioFinal;
 		this.precioEstimado = precioEstimado;
@@ -100,14 +131,6 @@ public class Viaje {
 		this.fechaFin = fechaFin;
 	}
 
-	public int getKmRecorridos() {
-		return kmRecorridos;
-	}
-
-	public void setKmRecorridos(int kmRecorridos) {
-		this.kmRecorridos = kmRecorridos;
-	}
-
 	public boolean isEstadoPausa() {
 		return estadoPausa;
 	}
@@ -120,8 +143,8 @@ public class Viaje {
 		return precioFinal;
 	}
 
-	public void setPrecioFinal(long precioFinal) {
-		this.precioFinal = precioFinal;
+	public void setPrecioFinal(double d) {
+		this.precioFinal = d;
 	}
 
 	public double getPrecioEstimado() {
@@ -156,10 +179,26 @@ public class Viaje {
 		this.usuario = usuario;
 	}
 
+	public double getDistanciaEstimada() {
+		return distanciaEstimada;
+	}
+
+	public void setDistanciaEstimada(double distanciaEstimada) {
+		this.distanciaEstimada = distanciaEstimada;
+	}
+
+	public double getDistanciaRecorrida() {
+		return distanciaRecorrida;
+	}
+
+	public void setDistanciaRecorrida(double distanciaRecorrida) {
+		this.distanciaRecorrida = distanciaRecorrida;
+	}
+
 	@Override
 	public String toString() {
 		return "Viaje [id:" + idViaje + ", usuario:" + usuario.getIdUsuario() + ", monopatin:" + monopatin.getPatente()
-				+ ", fechaInicio:" + fechaInicio + ", fechaFin:" + fechaFin + ", kmRecorridos:" + kmRecorridos
+				+ ", fechaInicio:" + fechaInicio + ", fechaFin:" + fechaFin + ", kmRecorridos:" 
 				+ ", estadoPausa:" + estadoPausa + ", precioFinal:" + precioFinal + ", precioEstimado:" + precioEstimado
 				+ ", precioRecorridoActual:" + precioRecorridoActual + ", tiempoPausa:" + tiempoPausa + "]";
 	}

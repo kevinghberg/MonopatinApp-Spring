@@ -46,7 +46,13 @@ public class ParadaServicio {
 
 	public Parada agregarRelacionMonopatin(ParadaMonopatinDto relacion) {
 		Parada parada = paradaRepository.findById(relacion.getIdParada());
+		List<Parada> lista = paradaRepository.findAll();
 		Monopatin monopatin = monopatinRepository.findByIdMonopatin(relacion.getIdMonopatin());
+		for (Parada pr : lista) {
+			if (pr.getListaMonopatines().contains(monopatin)) {
+				pr.getListaMonopatines().remove(monopatin);
+			}
+		}
 		if (parada != null && monopatin != null) {
 			parada.getListaMonopatines().add(monopatin);
 			return parada;
@@ -60,7 +66,7 @@ public class ParadaServicio {
 		for (int i = 0; i < listaParadas.size(); i++) {
 			Localidad localidad = new Localidad(latitud, longitud);
 			Localidad localidad2 = new Localidad(listaParadas.get(i).getLatitud(), listaParadas.get(i).getLongitud());
-			double diferencia = localidad.distanceTo(localidad2);
+			double diferencia = localidad.haversine(localidad2);
 			System.out.println("diferencia:" + diferencia);
 			if (diferencia > distancia) {
 				listaParadas.remove(i);

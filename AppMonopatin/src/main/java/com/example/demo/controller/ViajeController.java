@@ -8,8 +8,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.example.demo.dtos.ParadaMonopatinDto;
 import com.example.demo.dtos.ViajeMonopatinUsuarioDto;
 import com.example.demo.model.Viaje;
+import com.example.demo.services.ParadaServicio;
 import com.example.demo.services.ViajeServicio;
 
 @RestController
@@ -20,8 +22,11 @@ public class ViajeController {
 	@Autowired
 
 	private ViajeServicio viajeServicio;
+	private ParadaServicio paradaServicio;
 
-	public ViajeController(@Qualifier("viajeServicio") ViajeServicio viajeServicio) {
+	public ViajeController(@Qualifier("viajeServicio") ViajeServicio viajeServicio,
+			@Qualifier("paradaServicio") ParadaServicio paradaServicio) {
+		this.paradaServicio = paradaServicio;
 		this.viajeServicio = viajeServicio;
 	}
 
@@ -35,14 +40,24 @@ public class ViajeController {
 		return viajeServicio.save(viaje);
 	}
 
-	@PostMapping(value = "/reservarmonopatin", headers = "content-type=application/json")
-	public ResponseEntity<String> reservarMonopatin(@RequestBody ViajeMonopatinUsuarioDto vmudto) {
-		Viaje viaje = viajeServicio.reservarMonopatin(vmudto);
+	@PostMapping(value = "/registrarViaje", headers = "content-type=application/json")
+	public ResponseEntity<String> registrarViaje(@RequestBody ViajeMonopatinUsuarioDto vmudto) {
+		Viaje viaje = viajeServicio.registrarViaje(vmudto);
+		paradaServicio.agregarRelacionMonopatin(
+				new ParadaMonopatinDto(vmudto.getIdMonopatin(), vmudto.getIdParadaComienzo()));
 		if (viaje != null) {
 			return new ResponseEntity<>(viaje.toString(), HttpStatus.OK);
 		} else {
 			return new ResponseEntity<>("No reservado", HttpStatus.BAD_REQUEST);
 		}
+	}
+	
+	@PostMapping(value = "registrarLlegada",headers = "content-type=application/json")
+	public ResponseEntity<Viaje> registrarLlegada(@RequestBody int id){
+		double precioFinal = viajeServicio.registrarLlegada(id);
+		
+		return null;
+		
 	}
 
 	@DeleteMapping(value = "/borrar/{id}")
