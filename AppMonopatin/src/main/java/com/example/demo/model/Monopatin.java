@@ -2,6 +2,7 @@ package com.example.demo.model;
 
 import javax.persistence.*;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 @Entity
@@ -11,26 +12,41 @@ public class Monopatin {
 
 	@Id
 	@Column(name = "id")
+	@ApiModelProperty(hidden = true)
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int idMonopatin;
 
-	@OneToOne(fetch = FetchType.LAZY, mappedBy = "monopatin")
+	@OneToOne(fetch = FetchType.EAGER, mappedBy = "monopatin")
+	@ApiModelProperty(hidden = true)
 	private Viaje viaje;
 
 	@ManyToOne(fetch = FetchType.EAGER)
+	@ApiModelProperty(hidden = true)
 	private Parada parada;
 
 	@Column
+	@ApiModelProperty(hidden = true)
 	private boolean enUso;
 
 	@Column
+	@ApiModelProperty(hidden = true)
 	private boolean estadoMantenimiento;
 
 	@Column
+	@ApiModelProperty(hidden = true)
 	private double tiempoUso;
 
 	@Column
+	@ApiModelProperty(hidden = true)
 	private double kilometrosRecorridos;
+
+	@Column
+	@ApiModelProperty(hidden = true)
+	private int tiempoPausaTotal;
+
+	@Column
+	@ApiModelProperty(hidden = true)
+	private int cantidadViajes;
 
 	@Column(unique = true)
 	private String patente;
@@ -92,6 +108,22 @@ public class Monopatin {
 
 	public void setKilometrosRecorridos(double kilometrosRecorridos) {
 		this.kilometrosRecorridos = kilometrosRecorridos;
+	}
+
+	public int getTiempoPausaTotal() {
+		return tiempoPausaTotal;
+	}
+
+	public void setTiempoPausaTotal(int tiempoPausaTotal) {
+		this.tiempoPausaTotal = tiempoPausaTotal;
+	}
+
+	public int getCantidadViajes() {
+		return cantidadViajes;
+	}
+
+	public void setCantidadViajes(int cantidadViajes) {
+		this.cantidadViajes = cantidadViajes;
 	}
 
 }

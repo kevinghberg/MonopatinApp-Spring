@@ -22,7 +22,8 @@ public class Localidad {
 		this.latitud = Math.toRadians(this.latitud);
 
 // apply formulae
-		double a = Math.pow(Math.sin(dLat / 2), 2) + Math.pow(Math.sin(dLon / 2), 2) * Math.cos(this.latitud) * Math.cos(destino.latitud);
+		double a = Math.pow(Math.sin(dLat / 2), 2)
+				+ Math.pow(Math.sin(dLon / 2), 2) * Math.cos(this.latitud) * Math.cos(destino.latitud);
 		double rad = 6371;
 		double c = 2 * Math.asin(Math.sqrt(a));
 		return rad * c;

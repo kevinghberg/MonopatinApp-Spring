@@ -10,7 +10,6 @@ import com.example.demo.model.Administrador;
 @Repository
 public interface AdministradorRepository extends JpaRepository<Administrador, Long> {
 
-	
 	@Qualifier("administradorRepository")
 	@Autowired
 	public Administrador findById(int id);

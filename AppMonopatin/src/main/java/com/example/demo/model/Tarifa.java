@@ -4,30 +4,33 @@ import java.time.LocalDate;
 
 import javax.persistence.*;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 @Entity
 @Data
 public class Tarifa {
-	
+
 	@Id
+	@ApiModelProperty(hidden = true)
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int idTarifa;
-	
+
 	@Column
-	private float tarifaRegular;
-	
+	private double tarifaRegular;
+
 	@Column
-	private float tarifaPausa;
-	
+	private double tarifaPausa;
+
 	@Column
+	@ApiModelProperty(hidden = true)
 	private LocalDate fecha;
 
 	public Tarifa() {
 	}
 
-	public Tarifa(int tarifaRegular, int tarifaPausa) {
-		this.tarifaRegular = tarifaRegular;
+	public Tarifa(double d, double tarifaPausa) {
+		this.tarifaRegular = d;
 		this.tarifaPausa = tarifaPausa;
 		this.fecha = LocalDate.now();
 	}
@@ -40,19 +43,19 @@ public class Tarifa {
 		this.idTarifa = idTarifa;
 	}
 
-	public float getTarifaRegular() {
+	public double getTarifaRegular() {
 		return tarifaRegular;
 	}
 
-	public void setTarifaRegular(float tarifaRegular) {
+	public void setTarifaRegular(double tarifaRegular) {
 		this.tarifaRegular = tarifaRegular;
 	}
 
-	public float getTarifaPausa() {
+	public double getTarifaPausa() {
 		return tarifaPausa;
 	}
 
-	public void setTarifaPausa(float tarifaPausa) {
+	public void setTarifaPausa(double tarifaPausa) {
 		this.tarifaPausa = tarifaPausa;
 	}
 
@@ -63,5 +66,5 @@ public class Tarifa {
 	public void setFecha(LocalDate fecha) {
 		this.fecha = fecha;
 	}
-	
+
 }

@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.dtos.ParadaMonopatinDto;
 import com.example.demo.model.Parada;
-import com.example.demo.services.MonopatinServicio;
 import com.example.demo.services.ParadaServicio;
 
 @RestController

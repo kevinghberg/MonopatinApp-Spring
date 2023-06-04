@@ -36,4 +36,8 @@ public class AdministradorServicio {
 		}
 	}
 
+	public Administrador findById(int i) {
+		return administradorRepository.findById(i);
+	}
+
 }

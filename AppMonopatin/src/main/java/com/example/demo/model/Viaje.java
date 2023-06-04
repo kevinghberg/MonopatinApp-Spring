@@ -4,6 +4,9 @@ import java.time.LocalDate;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 @Entity
@@ -13,15 +16,18 @@ public class Viaje {
 
 	@Id
 	@Column(name = "id")
+	@ApiModelProperty(hidden = true)
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 
 	@OneToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "usuario_id")
+	@ApiModelProperty(hidden = true)
 	private Usuario usuario;
 
 	@OneToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "monopatin_id")
+	@ApiModelProperty(hidden = true)
 	private Monopatin monopatin;
 	
 	@OneToOne(fetch = FetchType.EAGER)
@@ -33,37 +39,42 @@ public class Viaje {
 	private Parada paradaDestino;
 
 	@Column
+	@ApiModelProperty(hidden = true)
 	private LocalDate fechaInicio;
 
 	@Column
+	@ApiModelProperty(hidden = true)
 	private LocalDate fechaFin;
 
 	@Column
+	@ApiModelProperty(hidden = true)
 	private double distanciaEstimada;
 	
 	@Column
+	@ApiModelProperty(hidden = true)
 	private double distanciaDesvio;
 
 	@Column
+	@ApiModelProperty(hidden = true)
 	private double precioFinal;
 
 	@Column
+	@ApiModelProperty(hidden = true)
 	private double precioEstimado;
 	
 	@Column
+	@ApiModelProperty(hidden = true)
 	private double tarifaPausa;
 	
 	@Column
+	@ApiModelProperty(hidden = true)
 	private double tarifaRegular;
 
 	@Column
+	@ApiModelProperty(hidden = true)
 	private int tiempoPausa;
 	
 	public Viaje() {
-	}
-
-	public Viaje(Monopatin monopatin) {
-		this.monopatin = monopatin;
 	}
 
 	public int getIdViaje() {

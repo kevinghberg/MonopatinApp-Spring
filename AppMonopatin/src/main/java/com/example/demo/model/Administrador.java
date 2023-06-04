@@ -6,6 +6,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 @Entity
@@ -13,6 +15,7 @@ import lombok.Data;
 public class Administrador {
 
 	@Id
+	@ApiModelProperty(hidden = true)
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 

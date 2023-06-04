@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import java.util.List;
+import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -16,8 +17,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.dtos.MonopatinEstadoDto;
+import com.example.demo.dtos.ReporteMonopatinDto;
 import com.example.demo.model.Monopatin;
+import com.example.demo.model.Parada;
 import com.example.demo.services.MonopatinServicio;
+import com.example.demo.services.ParadaServicio;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
+
+import io.swagger.annotations.ApiModelProperty;
 
 @RestController
 @RequestMapping("monopatines")
@@ -27,8 +34,11 @@ public class MonopatinController {
 	@Autowired
 
 	private MonopatinServicio monopatinServicio;
+	private ParadaServicio paradaServicio;
 
-	public MonopatinController(@Qualifier("monopatinServicio") MonopatinServicio monopatin) {
+	public MonopatinController(@Qualifier("monopatinServicio") MonopatinServicio monopatin,
+			@Qualifier("paradaServicio") ParadaServicio paradaServicio) {
+		this.paradaServicio = paradaServicio;
 		this.monopatinServicio = monopatin;
 	}
 
@@ -71,6 +81,36 @@ public class MonopatinController {
 			return new ResponseEntity<>(monopatin, HttpStatus.OK);
 		else
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+	}
+
+	@GetMapping("/reporte/conpausa")
+	public List<ReporteMonopatinDto> obtenerReporteConPausa() {
+		return monopatinServicio.obtenerReporteConPausa();
+	}
+
+	@GetMapping("/reporte/sinpausa")
+	public List<ReporteMonopatinDto> obtenerReporteSinPausa() {
+		return monopatinServicio.obtenerReporteSinPausa();
+	}
+
+	@GetMapping("/reporte/kilometros")
+	public List<ReporteMonopatinDto> obtenerReportePorKilometraje() {
+		return monopatinServicio.obtenerReportePorKilometraje();
+	}
+
+	@GetMapping(value = "/buscarpordistancia/{latitud}/{longitud}/{distancia}")
+	public List<Monopatin> obtenerCercanas(@PathVariable Double latitud, @PathVariable Double longitud,
+			@PathVariable double distancia) {
+		List<Parada> listaParadas = paradaServicio.obtenerParadasCercanas(longitud, latitud, distancia);
+		List<Monopatin> listaMonopatines = new ArrayList<Monopatin>();
+		for (Parada parada : listaParadas) {
+			for (Monopatin monopatin : parada.getListaMonopatines()) {
+				if (!monopatin.isEnUso() && !monopatin.isEstadoMantenimiento()) {
+					listaMonopatines.add(monopatin);
+				}
+			}
+		}
+		return listaMonopatines;
 	}
 
 }

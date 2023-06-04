@@ -2,10 +2,11 @@ package com.example.demo.model;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Set;
 
 import javax.persistence.*;
 
+
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 @Entity
@@ -13,6 +14,7 @@ import lombok.Data;
 public class CuentaMercadoPago {
 
 	@Id
+	@ApiModelProperty(hidden = true)
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	
@@ -20,6 +22,7 @@ public class CuentaMercadoPago {
 	private double saldo;
 		
 	@Column
+	@ApiModelProperty(hidden = true)
 	private LocalDate fechaAlta;
 	
     @OneToMany(fetch = FetchType.EAGER)

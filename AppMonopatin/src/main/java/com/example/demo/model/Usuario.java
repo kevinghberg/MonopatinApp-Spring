@@ -3,6 +3,10 @@ package com.example.demo.model;
 
 
 import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 @Entity
@@ -12,13 +16,16 @@ public class Usuario {
 
 	@Id
     @Column(name = "id")
+	@ApiModelProperty(hidden = true)
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int idUsuario;
 	
     @OneToOne(fetch = FetchType.EAGER, mappedBy = "usuario")
+	@ApiModelProperty(hidden = true)
     private Viaje viaje;
     
     @ManyToOne(fetch = FetchType.EAGER)
+	@ApiModelProperty(hidden = true)
     private CuentaMercadoPago cuentamp;
 
 	@Column
@@ -34,6 +41,7 @@ public class Usuario {
 	private String email;
 
 	@Column
+	@ApiModelProperty(hidden = true)
 	private boolean estadoCuentaAnulada;
 
 	public Usuario() {

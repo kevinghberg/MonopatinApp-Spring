@@ -4,6 +4,8 @@ import java.util.Set;
 
 import javax.persistence.*;
 
+
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 @Entity
@@ -13,14 +15,17 @@ public class Parada {
 	
 	@Id
     @Column(name = "id")
+	@ApiModelProperty(hidden = true)
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	
     @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "monopatin_id")
+	@ApiModelProperty(hidden = true)
 	private Set<Monopatin> listaMonopatin;
     
     @OneToOne(fetch = FetchType.EAGER)
+	@ApiModelProperty(hidden = true)
     private Viaje viaje;
     
 	@Column
@@ -32,9 +37,9 @@ public class Parada {
 	public Parada() {
 	}
 
-	public Parada(float latitud, float longitud) {
-		this.latitud = latitud;
-		this.longitud = longitud;
+	public Parada(double d, double e) {
+		this.latitud = d;
+		this.longitud = e;
 	}
 
 	public int getIdParada() {

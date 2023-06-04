@@ -1,11 +1,14 @@
 package com.example.demo.services;
 
 import java.util.List;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.dtos.MonopatinEstadoDto;
+import com.example.demo.dtos.ReporteMonopatinDto;
 import com.example.demo.model.CuentaMercadoPago;
 import com.example.demo.model.Monopatin;
 import com.example.demo.repository.MonopatinRepository;
@@ -68,6 +71,39 @@ public class MonopatinServicio {
 			return monopatin;
 		}
 		return null;
+	}
+
+	public List<ReporteMonopatinDto> obtenerReportePorKilometraje() {
+		List<Monopatin> lista = monopatinRepository.findAll();
+		List<ReporteMonopatinDto> listaDto = new ArrayList<ReporteMonopatinDto>();
+		for (Monopatin monopatin : lista) {
+			ReporteMonopatinDto reporte = new ReporteMonopatinDto(monopatin.getIdMonopatin(),
+					monopatin.getKilometrosRecorridos(), monopatin.getPatente());
+			listaDto.add(reporte);
+		}
+		return listaDto;
+	}
+
+	public List<ReporteMonopatinDto> obtenerReporteConPausa() {
+		List<Monopatin> lista = monopatinRepository.findAll();
+		List<ReporteMonopatinDto> listaDto = new ArrayList<ReporteMonopatinDto>();
+		for (Monopatin monopatin : lista) {
+			ReporteMonopatinDto reporte = new ReporteMonopatinDto(monopatin.getIdMonopatin(),
+					monopatin.getTiempoPausaTotal() + monopatin.getTiempoUso(), monopatin.getPatente());
+			listaDto.add(reporte);
+		}
+		return listaDto;
+	}
+
+	public List<ReporteMonopatinDto> obtenerReporteSinPausa() {
+		List<Monopatin> lista = monopatinRepository.findAll();
+		List<ReporteMonopatinDto> listaDto = new ArrayList<ReporteMonopatinDto>();
+		for (Monopatin monopatin : lista) {
+			ReporteMonopatinDto reporte = new ReporteMonopatinDto(monopatin.getIdMonopatin(), monopatin.getTiempoUso(),
+					monopatin.getPatente());
+			listaDto.add(reporte);
+		}
+		return listaDto;
 	}
 
 }

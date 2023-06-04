@@ -1,6 +1,5 @@
 package com.example.demo.controller;
 
-import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.demo.model.Parada;
 import com.example.demo.model.Tarifa;
 import com.example.demo.services.TarifaServicio;
 
@@ -49,12 +47,12 @@ public class TarifaController {
 
 	@GetMapping(value = "/valorregular")
 	public float obtenerTarifaRegular() {
-		return tarifaServicio.findTopByOrderByIdTarifaDesc().getTarifaRegular();
+		return (float) tarifaServicio.findTopByOrderByIdTarifaDesc().getTarifaRegular();
 	}
 
 	@GetMapping(value = "/valorpausa")
 	public float obtenerTarifaPausa() {
-		return tarifaServicio.findTopByOrderByIdTarifaDesc().getTarifaPausa();
+		return (float) tarifaServicio.findTopByOrderByIdTarifaDesc().getTarifaPausa();
 	}
 
 	@DeleteMapping(value = "/borrar/{id}")

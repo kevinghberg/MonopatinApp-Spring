@@ -76,14 +76,17 @@ public class ViajeServicio {
 		Monopatin monopatin = monopatinRepository.findByIdMonopatin(vmudto.getIdMonopatin());
 		Parada paradaComienzo = paradaRepository.findById(vmudto.getIdParadaComienzo());
 		Parada paradaDestino = paradaRepository.findById(vmudto.getIdParadaDestino());
-		if (paradaComienzo.getIdParada() == paradaDestino.getIdParada()) {
-			return null;
-		}
 		Tarifa tarifaActual = tarifaRepository.findTopByOrderByIdTarifaDesc();
 		List<CuentaMercadoPago> cuentasMP = cuentaMercadoPagoRepository.findAll();
 		CuentaMercadoPago cuenta = obtenerCuentaMayorSaldo(usuario, cuentasMP);
 		if (usuario != null && paradaComienzo != null && paradaDestino != null && tarifaActual != null
 				&& cuenta != null) {
+			if (usuario.isEstadoCuentaAnulada())
+				return null;
+			if (monopatin.isEnUso() && monopatin.isEstadoMantenimiento())
+				return null;
+			if (paradaComienzo.getIdParada() == paradaDestino.getIdParada())
+				return null;
 			if (monopatin != null && !monopatin.isEnUso() && !monopatin.isEstadoMantenimiento()) {
 				double distancia = new Localidad(paradaComienzo.getLatitud(), paradaComienzo.getLongitud())
 						.haversine(new Localidad(paradaDestino.getLatitud(), paradaDestino.getLongitud()));
@@ -149,15 +152,20 @@ public class ViajeServicio {
 	public Viaje registrarLlegada(int id) {
 		Viaje viaje = viajeRepository.findById(id);
 		if (viaje != null) {
+
 			Monopatin monopatin = monopatinRepository.findByIdMonopatin(viaje.getMonopatin().getIdMonopatin());
-			monopatin.setEnUso(false);
+
 			Parada paradaInicio = paradaRepository.findById(viaje.getParadaInicio().getIdParada());
 			Parada paradaFinal = paradaRepository.findById(viaje.getParadaDestino().getIdParada());
 			paradaInicio.getListaMonopatines().remove(monopatin);
 			paradaFinal.getListaMonopatines().add(monopatin);
+
 			double distanciaFinal = viaje.getDistanciaDesvio() + viaje.getDistanciaEstimada();
+			monopatin.setEnUso(false);
 			monopatin.setKilometrosRecorridos(distanciaFinal + monopatin.getKilometrosRecorridos());
 			monopatin.setTiempoUso(distanciaFinal / VELOCIDAD_POR_HORA);
+			monopatin.setTiempoPausaTotal(viaje.getTiempoPausa());
+			monopatin.setCantidadViajes(monopatin.getCantidadViajes() + 1);
 			if (viaje.getTiempoPausa() < TIEMPO_LIMITE_PAUSA)
 				viaje.setPrecioFinal(viaje.getTarifaRegular() * distanciaFinal);
 			else
