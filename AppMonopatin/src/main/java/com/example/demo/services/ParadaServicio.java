@@ -69,7 +69,6 @@ public class ParadaServicio {
 			Localidad localidad = new Localidad(latitud, longitud);
 			Localidad localidad2 = new Localidad(listaParadas.get(i).getLatitud(), listaParadas.get(i).getLongitud());
 			double diferencia = localidad.haversine(localidad2);
-			System.out.println("diferencia:" + diferencia);
 			if (diferencia > distancia) {
 				listaParadas.remove(i);
 			}

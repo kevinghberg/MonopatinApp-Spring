@@ -1,5 +1,6 @@
 package com.example.demo.services;
 
+import java.sql.Date;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -8,6 +9,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.dtos.ReporteViajeIdCountMonopatinDto;
 import com.example.demo.dtos.ViajeMonopatinUsuarioDto;
 import com.example.demo.model.CuentaMercadoPago;
 import com.example.demo.model.Localidad;
@@ -189,5 +191,22 @@ public class ViajeServicio {
 
 	public List<Viaje> findAll() {
 		return viajeRepository.findAll();
+	}
+
+	public List<ReporteViajeIdCountMonopatinDto> obtenerReportePorAnioConCantidadMinima(long cantidad, Integer anio) {
+		List<ReporteViajeIdCountMonopatinDto> lista = viajeRepository.obtenerReportePorAnioConCantidadMinima(cantidad,
+				anio);
+		if (lista != null) {
+			return lista;
+		}
+		return null;
+	}
+
+	public List<String> reporteFacturadoEntreDosFechas(LocalDate fecha1, LocalDate fecha2) {
+		List<String> lista = viajeRepository.reporteFacturadoEntreDosFechas(fecha1, fecha2);
+		if (lista != null) {
+			return lista;
+		}
+		return null;
 	}
 }

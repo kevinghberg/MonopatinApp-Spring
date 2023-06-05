@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.dtos.MonopatinEstadoDto;
+import com.example.demo.dtos.ReporteDobleIntDto;
 import com.example.demo.dtos.ReporteMonopatinDto;
 import com.example.demo.model.CuentaMercadoPago;
 import com.example.demo.model.Monopatin;
@@ -104,6 +105,12 @@ public class MonopatinServicio {
 			listaDto.add(reporte);
 		}
 		return listaDto;
+	}
+
+	public ReporteDobleIntDto obtenerReporteEnUsoVsEnMantenimiento() {
+		int valor1 = monopatinRepository.obtenerReporteEnUso();
+		int valor2 = monopatinRepository.obtenerReporteMantenimiento();
+		return new ReporteDobleIntDto(valor1, valor2);
 	}
 
 }
