@@ -44,6 +44,9 @@ public class UsuarioServicio {
 	}
 
 	public Usuario save(Usuario usuario) {
+		if (usuarioRepository.findByEmail(usuario.getEmail())!=null) {
+			return usuario;
+		}
 		return usuarioRepository.save(usuario);
 	}
 

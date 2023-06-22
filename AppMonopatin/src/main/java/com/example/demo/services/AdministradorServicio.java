@@ -23,6 +23,9 @@ public class AdministradorServicio {
 	}
 
 	public Administrador save(Administrador admin) {
+		if (administradorRepository.findByNombre(admin.getNombre())!=null) {
+			return admin;
+		}
 		return administradorRepository.save(admin);
 	}
 

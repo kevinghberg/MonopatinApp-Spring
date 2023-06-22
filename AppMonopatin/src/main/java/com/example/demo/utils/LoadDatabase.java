@@ -56,7 +56,6 @@ class LoadDatabase {
 			ps.agregarRelacionMonopatin(new ParadaMonopatinDto(1, 1)); // LE ASIGNA UN MONOPATIN A UNA PARADA
 			vs.registrarViaje(new ViajeMonopatinUsuarioDto(1, 1, 1, 2));
 			vs.registrarLlegada(1);
-
 			// 3.a Como encargado de mantenimiento quiero poder generar un reporte de uso de
 			// monopatines por kilómetros para establecer si un monopatín requiere
 			// demantenimiento. Este reporte debe poder configurarse para incluir (o no)

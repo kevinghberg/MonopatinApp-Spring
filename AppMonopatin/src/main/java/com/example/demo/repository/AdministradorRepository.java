@@ -14,4 +14,6 @@ public interface AdministradorRepository extends JpaRepository<Administrador, Lo
 	@Autowired
 	public Administrador findById(int id);
 
+	public Administrador findByNombre(String nombre);
+
 }

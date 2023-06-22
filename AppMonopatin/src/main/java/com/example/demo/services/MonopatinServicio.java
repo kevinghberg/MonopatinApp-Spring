@@ -32,6 +32,9 @@ public class MonopatinServicio {
 	}
 
 	public Monopatin save(Monopatin monopatin) {
+		if (monopatinRepository.findByPatente(monopatin.getPatente())!=null) {
+			return monopatin;
+		}
 		return monopatinRepository.save(monopatin);
 	}
 
