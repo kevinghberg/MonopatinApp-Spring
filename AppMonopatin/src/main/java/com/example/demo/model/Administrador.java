@@ -6,8 +6,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-
 import io.swagger.annotations.ApiModelProperty;
+//import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 @Entity
@@ -20,13 +20,17 @@ public class Administrador {
 	private int id;
 
 	@Column
-	private String nombre;
+	private String usuario;
+	
+	@Column
+	private String contraseña;
 
 	public Administrador() {
 	}
 
-	public Administrador(String nombre) {
-		this.nombre = nombre;
+	public Administrador(String usuario, String contraseña) {
+		this.usuario = usuario;
+		this.contraseña = contraseña;
 	}
 
 	public int getId() {
@@ -37,12 +41,20 @@ public class Administrador {
 		this.id = id;
 	}
 
-	public String getNombre() {
-		return nombre;
+	public String getUsuario() {
+		return usuario;
 	}
 
-	public void setNombre(String nombre) {
-		this.nombre = nombre;
+	public void setUsuario(String usuario) {
+		this.usuario = usuario;
+	}
+
+	public String getContraseña() {
+		return contraseña;
+	}
+
+	public void setContraseña(String contraseña) {
+		this.contraseña = contraseña;
 	}
 
 }

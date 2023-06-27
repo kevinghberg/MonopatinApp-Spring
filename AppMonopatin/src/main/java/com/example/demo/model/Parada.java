@@ -1,5 +1,6 @@
 package com.example.demo.model;
 
+import java.util.Objects;
 import java.util.Set;
 
 import javax.persistence.*;
@@ -73,6 +74,24 @@ public class Parada {
 
 	public void setLongitud(double longitud) {
 		this.longitud = longitud;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(latitud, longitud);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Parada other = (Parada) obj;
+		return Double.doubleToLongBits(latitud) == Double.doubleToLongBits(other.latitud)
+				&& Double.doubleToLongBits(longitud) == Double.doubleToLongBits(other.longitud);
 	}
 
 }

@@ -1,47 +1,17 @@
 package com.example.demo.model;
 
-
-
-import javax.persistence.*;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import io.swagger.annotations.ApiModelProperty;
-import lombok.Data;
-
-@Entity
-@Data
-@Table(name = "usuario")
 public class Usuario {
 
-	@Id
-    @Column(name = "id")
-	@ApiModelProperty(hidden = true)
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int idUsuario;
-	
-    @OneToOne(fetch = FetchType.EAGER, mappedBy = "usuario")
-	@ApiModelProperty(hidden = true)
-    private Viaje viaje;
-    
-    @ManyToOne(fetch = FetchType.EAGER)
-	@ApiModelProperty(hidden = true)
-    private CuentaMercadoPago cuentamp;
-
-	@Column
+ 
 	private String nombre;
 
-	@Column
 	private String apellido;
 
-	@Column
 	private String celular;
 
-	@Column(unique = true)
 	private String email;
 
-	@Column
-	@ApiModelProperty(hidden = true)
 	private boolean estadoCuentaAnulada;
 
 	public Usuario() {
@@ -106,13 +76,5 @@ public class Usuario {
 	public void setEstadoCuentaAnulada(boolean estadoCuentaAnulada) {
 		this.estadoCuentaAnulada = estadoCuentaAnulada;
 	}
-
-	/*public Set<CuentaMercadoPago> getListaMP() {
-		return listaMP;
-	}
-
-	public void setListaMP(Set<CuentaMercadoPago> listaMP) {
-		this.listaMP = listaMP;
-	}*/
 
 }

@@ -4,8 +4,6 @@ import java.time.LocalDate;
 
 import javax.persistence.*;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -20,11 +18,9 @@ public class Viaje {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 
-	@OneToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "usuario_id")
-	@ApiModelProperty(hidden = true)
-	private Usuario usuario;
-
+	@Column
+	private int idUsuario;
+	
 	@OneToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "monopatin_id")
 	@ApiModelProperty(hidden = true)
@@ -84,6 +80,14 @@ public class Viaje {
 	public void setIdViaje(int id) {
 		this.id = id;
 	}
+	
+	public int getIdUsuario() {
+		return idUsuario;
+	}
+
+	public void setIdUsuario(int idUsuario) {
+		this.idUsuario = idUsuario;
+	}
 
 	public Monopatin getMonopatin() {
 		return monopatin;
@@ -141,13 +145,7 @@ public class Viaje {
 		this.tiempoPausa = tiempoPausa;
 	}
 
-	public Usuario getUsuario() {
-		return usuario;
-	}
 
-	public void setUsuario(Usuario usuario) {
-		this.usuario = usuario;
-	}
 
 	public double getDistanciaEstimada() {
 		return distanciaEstimada;

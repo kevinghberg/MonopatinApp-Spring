@@ -29,6 +29,14 @@ public class ParadaServicio {
 	}
 
 	public Parada save(Parada parada) {
+		List<Parada> listado = paradaRepository.findAll();
+		boolean encontrado = false;
+		for (Parada elemento : listado) {
+			if (elemento.hashCode()==parada.hashCode())
+				encontrado = true;
+		}
+		if (encontrado)
+			return null;
 		return paradaRepository.save(parada);
 	}
 

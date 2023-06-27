@@ -23,7 +23,7 @@ public class AdministradorServicio {
 	}
 
 	public Administrador save(Administrador admin) {
-		if (administradorRepository.findByNombre(admin.getNombre())!=null) {
+		if (administradorRepository.findByUsuario(admin.getUsuario())!=null) {
 			return admin;
 		}
 		return administradorRepository.save(admin);
