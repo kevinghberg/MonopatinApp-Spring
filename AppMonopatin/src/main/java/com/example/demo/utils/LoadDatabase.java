@@ -25,7 +25,6 @@ import com.example.demo.services.ParadaServicio;
 import com.example.demo.services.TarifaServicio;
 import com.example.demo.services.ViajeServicio;
 
-
 @Configuration
 @Slf4j
 class LoadDatabase {

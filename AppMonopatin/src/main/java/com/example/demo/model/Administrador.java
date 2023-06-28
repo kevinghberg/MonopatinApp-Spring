@@ -6,6 +6,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import com.example.demo.security.PasswordUtils;
+
 import io.swagger.annotations.ApiModelProperty;
 //import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -23,14 +25,16 @@ public class Administrador {
 	private String usuario;
 	
 	@Column
-	private String contraseña;
+	private String password;
+
+	private String token;
 
 	public Administrador() {
 	}
 
-	public Administrador(String usuario, String contraseña) {
+	public Administrador(String usuario, String password) {
 		this.usuario = usuario;
-		this.contraseña = contraseña;
+		this.password = PasswordUtils.hashPassword(password);
 	}
 
 	public int getId() {
@@ -49,12 +53,24 @@ public class Administrador {
 		this.usuario = usuario;
 	}
 
-	public String getContraseña() {
-		return contraseña;
+	public String get() {
+		return password;
 	}
 
-	public void setContraseña(String contraseña) {
-		this.contraseña = contraseña;
+	public void set(String password) {
+		this.password = password;
+	}
+	
+	public void setToken(String token) {
+		this.token = token;
+	}
+
+	public String getToken() {
+		return token;
+	}
+
+	public String getPassword() {
+		return password;
 	}
 
 }

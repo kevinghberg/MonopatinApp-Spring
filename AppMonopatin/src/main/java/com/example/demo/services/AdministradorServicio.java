@@ -43,4 +43,8 @@ public class AdministradorServicio {
 		return administradorRepository.findById(i);
 	}
 
+	public Administrador findByUsuario(String usuario) {
+		return administradorRepository.findByUsuario(usuario);
+	}
+
 }

@@ -1,5 +1,7 @@
 package com.example.demo.model;
 
+import com.example.demo.security.PasswordUtils;
+
 public class Usuario {
 
 	private int idUsuario;
@@ -13,16 +15,19 @@ public class Usuario {
 	private String email;
 
 	private boolean estadoCuentaAnulada;
+	
+	private String password;
 
 	public Usuario() {
 	}
 
-	public Usuario(String nombre, String apellido, String celular, String email) {
+	public Usuario(String nombre, String apellido, String celular, String email, String password) {
 		this.nombre = nombre;
 		this.apellido = apellido;
 		this.celular = celular;
 		this.email = email;
 		this.estadoCuentaAnulada = false;
+		this.password = PasswordUtils.hashPassword(password);
 	}
 
 	public Usuario(String nombre) {
@@ -75,6 +80,10 @@ public class Usuario {
 
 	public void setEstadoCuentaAnulada(boolean estadoCuentaAnulada) {
 		this.estadoCuentaAnulada = estadoCuentaAnulada;
+	}
+	
+	public String getPassword() {
+		return password;
 	}
 
 }

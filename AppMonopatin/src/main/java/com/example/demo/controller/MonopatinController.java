@@ -13,8 +13,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import com.example.demo.security.JWTAuthorizationFilter;
 
 import com.example.demo.dtos.MonopatinEstadoDto;
 import com.example.demo.dtos.ReporteMonopatinDto;
@@ -48,8 +50,11 @@ public class MonopatinController {
 	}
 
 	@PostMapping(value = "/agregar", headers = "content-type=application/json")
-	public Monopatin agregarMonopatin(@RequestBody Monopatin monopatin) {
-		return monopatinServicio.save(monopatin);
+	public ResponseEntity<Monopatin> agregarMonopatin(@RequestBody Monopatin monopatin, @RequestHeader("Authorization") String token) {
+		if (JWTAuthorizationFilter.verificarRol(token,"ROLE_ADMIN")) {
+			return new ResponseEntity<>(monopatinServicio.save(monopatin),HttpStatus.OK);
+		}
+		return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 	}
 
 	@GetMapping("/obtener/{patente}")
