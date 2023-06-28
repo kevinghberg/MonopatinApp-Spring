@@ -15,7 +15,9 @@ import org.springframework.web.client.RestTemplate;
 import com.example.demo.dtos.ParadaMonopatinDto;
 import com.example.demo.dtos.ViajeMonopatinUsuarioDto;
 import com.example.demo.model.CuentaMercadoPago;
+import com.example.demo.model.Usuario;
 import com.example.demo.model.Viaje;
+import com.example.demo.security.JWTAuthorizationFilter;
 import com.example.demo.services.ParadaServicio;
 import com.example.demo.services.ViajeServicio;
 
@@ -26,6 +28,9 @@ public class ViajeController {
 
 	@Qualifier("viajeServicio")
 	@Autowired
+	
+	private ViajeServicio viajeServicio;
+	private ParadaServicio paradaServicio;
 
 	@Bean
 	RestTemplate getRestTemplate() {
@@ -38,8 +43,7 @@ public class ViajeController {
 	static final String USUARIOS_URL = "http://localhost:8081/usuarios/";
 	static final String CUENTASMP_URL = "http://localhost:8081/cuentasmp/";
 
-	private ViajeServicio viajeServicio;
-	private ParadaServicio paradaServicio;
+
 
 	public ViajeController(@Qualifier("viajeServicio") ViajeServicio viajeServicio,
 			@Qualifier("paradaServicio") ParadaServicio paradaServicio) {
@@ -48,29 +52,36 @@ public class ViajeController {
 	}
 
 	@GetMapping("/")
-	public List<Viaje> getViajes() {
-		return viajeServicio.findAll();
+	public ResponseEntity<List<Viaje>> getViajes(@RequestHeader("Authorization") String token) {
+		if (JWTAuthorizationFilter.verificarTokenContieneAutorizacion(token, "ROLE_ADMIN"))
+			return new ResponseEntity<>(viajeServicio.findAll(), HttpStatus.OK);
+		else
+			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 	}
 
 	@PostMapping(value = "/registrarviaje", headers = "content-type=application/json")
-	public ResponseEntity<Viaje> registrarViaje(@RequestBody ViajeMonopatinUsuarioDto vmudto) {
-		boolean usuarioDisponible = restTemplate
-				.exchange(USUARIOS_URL + "disponible/" + vmudto.getIdUsuario(), HttpMethod.GET, null, boolean.class)
+	public ResponseEntity<Viaje> registrarViaje(@RequestBody ViajeMonopatinUsuarioDto vmudto,
+			@RequestHeader("Authorization") String token) {
+		Usuario usuario = restTemplate
+				.exchange(USUARIOS_URL + "obtener/id/" + vmudto.getIdUsuario(), HttpMethod.GET, null, Usuario.class)
 				.getBody();
-		if (usuarioDisponible) {
-			double saldoMaximo = restTemplate.exchange(USUARIOS_URL + "saldo_maximo/" + vmudto.getIdUsuario(),
-					HttpMethod.GET, null, Integer.class).getBody();
-			Viaje viaje = viajeServicio.registrarViaje(vmudto, saldoMaximo);
-			if (viaje != null) {
-				restTemplate.exchange(USUARIOS_URL + "enviaje/" + vmudto.getIdUsuario() + "/" + true, HttpMethod.PUT,
-						null, boolean.class);
-				paradaServicio.agregarRelacionMonopatin(
-						new ParadaMonopatinDto(vmudto.getIdMonopatin(), vmudto.getIdParadaComienzo()));
-				return new ResponseEntity<>(viaje, HttpStatus.OK);
+		if (JWTAuthorizationFilter.verificarTokenContieneAutorizacion(token, usuario.getEmail())) {
+			if (!usuario.isEstadoCuentaAnulada() && !usuario.isEnViaje()) {
+				double saldoMaximo = restTemplate.exchange(USUARIOS_URL + "saldo_maximo/" + usuario.getIdUsuario(),
+						HttpMethod.GET, null, Integer.class).getBody();
+				Viaje viaje = viajeServicio.registrarViaje(vmudto, saldoMaximo);
+				System.out.println(viaje);
+				if (viaje != null) {
+					paradaServicio.agregarRelacionMonopatin(
+							new ParadaMonopatinDto(vmudto.getIdMonopatin(), vmudto.getIdParadaComienzo()));
+					return new ResponseEntity<>(viaje, HttpStatus.OK);
+				} else
+					return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 			} else
 				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		} else
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+
 	}
 
 	@PutMapping(value = "registrarllegada/{id}")
@@ -79,10 +90,10 @@ public class ViajeController {
 		if (viaje != null) {
 			int id_usuario = viaje.getIdUsuario();
 			double precioFinal = viaje.getPrecioFinal();
-			restTemplate.exchange(USUARIOS_URL + "enviaje/" + viaje.getIdUsuario() + "/" + false, HttpMethod.PUT, null,
-					boolean.class);
-			restTemplate.exchange(CUENTASMP_URL + "debitar_dinero/" + id_usuario + "/" + precioFinal, HttpMethod.PUT,
-					null, CuentaMercadoPago.class);
+			/*restTemplate.exchange(USUARIOS_URL + "enviaje/" + viaje.getIdUsuario() + "/" + false, HttpMethod.PUT, null,
+					boolean.class);*/
+			/*restTemplate.exchange(CUENTASMP_URL + "debitar_dinero/" + id_usuario + "/" + precioFinal, HttpMethod.PUT,
+					null, CuentaMercadoPago.class);*/
 			return new ResponseEntity<>(viaje, HttpStatus.OK);
 		} else {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

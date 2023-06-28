@@ -18,6 +18,8 @@ public class Usuario {
 	
 	private String password;
 
+	private boolean enViaje;
+
 	public Usuario() {
 	}
 
@@ -84,6 +86,13 @@ public class Usuario {
 	
 	public String getPassword() {
 		return password;
+	}
+
+	public boolean isEnViaje() {
+		return enViaje;
+	}
+	public void setEnViaje(boolean enViaje) {
+		this.enViaje = enViaje;
 	}
 
 }

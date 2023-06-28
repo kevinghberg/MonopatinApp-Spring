@@ -24,9 +24,6 @@ import com.example.demo.model.Monopatin;
 import com.example.demo.model.Parada;
 import com.example.demo.services.MonopatinServicio;
 import com.example.demo.services.ParadaServicio;
-import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
-
-import io.swagger.annotations.ApiModelProperty;
 
 @RestController
 @RequestMapping("monopatines")
@@ -50,9 +47,12 @@ public class MonopatinController {
 	}
 
 	@PostMapping(value = "/agregar", headers = "content-type=application/json")
-	public ResponseEntity<Monopatin> agregarMonopatin(@RequestBody Monopatin monopatin, @RequestHeader("Authorization") String token) {
-		if (JWTAuthorizationFilter.verificarRol(token,"ROLE_ADMIN")) {
-			return new ResponseEntity<>(monopatinServicio.save(monopatin),HttpStatus.OK);
+	public ResponseEntity<Monopatin> agregarMonopatin(@RequestBody Monopatin monopatin,
+			@RequestHeader("Authorization") String token) {
+		if (JWTAuthorizationFilter.verificarTokenContieneAutorizacion(token, "ROLE_ADMIN")) {
+			if (monopatinServicio.save(monopatin) != null)
+				return new ResponseEntity<>(monopatin, HttpStatus.CREATED);
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 		return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 	}
@@ -63,44 +63,69 @@ public class MonopatinController {
 	}
 
 	@DeleteMapping(value = "/borrar/{id}")
-	public ResponseEntity<String> borrar(@PathVariable int id) {
-		if (monopatinServicio.delete(id))
-			return new ResponseEntity<>("Borrado id: " + id, HttpStatus.OK);
-		else
-			return new ResponseEntity<>("No borrado", HttpStatus.BAD_REQUEST);
+	public ResponseEntity<String> borrar(@PathVariable int id, @RequestHeader("Authorization") String token) {
+		if (JWTAuthorizationFilter.verificarTokenContieneAutorizacion(token, "ROLE_ADMIN")) {
+			if (monopatinServicio.delete(id))
+				return new ResponseEntity<>("Borrado id: " + id, HttpStatus.OK);
+			else
+				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 	}
 
 	@PutMapping("/mantenimiento")
-	public ResponseEntity<Monopatin> actualizarMantenimiento(@RequestBody MonopatinEstadoDto mmdto) {
-		Monopatin monopatin = monopatinServicio.actualizarEstadoMantenimiento(mmdto);
-		if (monopatin != null)
-			return new ResponseEntity<>(monopatin, HttpStatus.OK);
-		else
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+	public ResponseEntity<Monopatin> actualizarMantenimiento(@RequestBody MonopatinEstadoDto mmdto,
+			@RequestHeader("Authorization") String token) {
+		if (JWTAuthorizationFilter.verificarTokenContieneAutorizacion(token, "ROLE_ADMIN")) {
+			Monopatin monopatin = monopatinServicio.actualizarEstadoMantenimiento(mmdto);
+			if (monopatin != null)
+				return new ResponseEntity<>(monopatin, HttpStatus.OK);
+			else
+				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		} else
+			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+
 	}
 
 	@PutMapping("/enuso")
-	public ResponseEntity<Monopatin> actualizarEstadoEnUso(@RequestBody MonopatinEstadoDto mmdto) {
-		Monopatin monopatin = monopatinServicio.actualizarEstadoEnUso(mmdto);
-		if (monopatin != null)
-			return new ResponseEntity<>(monopatin, HttpStatus.OK);
-		else
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+	public ResponseEntity<Monopatin> actualizarEstadoEnUso(@RequestBody MonopatinEstadoDto mmdto,
+			@RequestHeader("Authorization") String token) {
+		if (JWTAuthorizationFilter.verificarTokenContieneAutorizacion(token, "ROLE_ADMIN")) {
+			Monopatin monopatin = monopatinServicio.actualizarEstadoEnUso(mmdto);
+			if (monopatin != null)
+				return new ResponseEntity<>(monopatin, HttpStatus.OK);
+			else
+				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		} else
+			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 	}
 
 	@GetMapping("/reporte/conpausa")
-	public List<ReporteMonopatinDto> obtenerReporteConPausa() {
-		return monopatinServicio.obtenerReporteConPausa();
+	public ResponseEntity<List<ReporteMonopatinDto>> obtenerReporteConPausa(
+			@RequestHeader("Authorization") String token) {
+		if (JWTAuthorizationFilter.verificarTokenContieneAutorizacion(token, "ROLE_ADMIN")) {
+			return new ResponseEntity<>(monopatinServicio.obtenerReporteConPausa(), HttpStatus.OK);
+		} else
+			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+
 	}
 
 	@GetMapping("/reporte/sinpausa")
-	public List<ReporteMonopatinDto> obtenerReporteSinPausa() {
-		return monopatinServicio.obtenerReporteSinPausa();
+	public ResponseEntity<List<ReporteMonopatinDto>> obtenerReporteSinPausa(
+			@RequestHeader("Authorization") String token) {
+		if (JWTAuthorizationFilter.verificarTokenContieneAutorizacion(token, "ROLE_ADMIN")) {
+			return new ResponseEntity<>(monopatinServicio.obtenerReporteSinPausa(), HttpStatus.OK);
+		} else
+			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 	}
 
 	@GetMapping("/reporte/kilometros")
-	public List<ReporteMonopatinDto> obtenerReportePorKilometraje() {
-		return monopatinServicio.obtenerReportePorKilometraje();
+	public ResponseEntity<List<ReporteMonopatinDto>> obtenerReportePorKilometraje(
+			@RequestHeader("Authorization") String token) {
+		if (JWTAuthorizationFilter.verificarTokenContieneAutorizacion(token, "ROLE_ADMIN")) {
+			return new ResponseEntity<>(monopatinServicio.obtenerReportePorKilometraje(), HttpStatus.OK);
+		} else
+			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 	}
 
 	@GetMapping(value = "/buscarpordistancia/{latitud}/{longitud}/{distancia}")

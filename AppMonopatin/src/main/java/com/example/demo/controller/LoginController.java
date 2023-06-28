@@ -39,26 +39,26 @@ public class LoginController {
 	@Qualifier("administradorServicio")
 	@Autowired
 	private AdministradorServicio administradorServicio;
+
 	public LoginController(@Qualifier("administradorServicio") AdministradorServicio administradorServicio) {
 		this.administradorServicio = administradorServicio;
 	}
-	
+
 	@Bean
 	RestTemplate getRestTemplat() {
 		return new RestTemplate();
 	}
-	
+
 	@Autowired
 	private RestTemplate restTemplate;
-	
-	static final String USUARIOS_URL = "http://localhost:8081/usuarios/";
 
+	static final String USUARIOS_URL = "http://localhost:8081/usuarios/";
 
 	@GetMapping("/usuario/")
 	public String loginUsuario(@RequestParam("email") String email, @RequestParam("contrasena") String contrasena) {
-		Usuario user = restTemplate.exchange(USUARIOS_URL + "usuario/"+ email, HttpMethod.GET,null,Usuario.class).getBody();
+		Usuario user = restTemplate.exchange(USUARIOS_URL + "obtener/email/" + email, HttpMethod.GET, null, Usuario.class).getBody();
 		if (user != null && PasswordUtils.checkPassword(contrasena, user.getPassword())) {
-			return getJWTToken(email,"ROLE_USER");
+			return getJWTToken(email, "ROLE_USER");
 		}
 		return "Nombre de usuario o contraseña incorrectos.";
 	}
@@ -67,11 +67,11 @@ public class LoginController {
 	public String loginAdmin(@RequestParam("usuario") String usuario, @RequestParam("contrasena") String contrasena) {
 		Administrador admin = administradorServicio.findByUsuario(usuario);
 		if (admin != null && PasswordUtils.checkPassword(contrasena, admin.getPassword())) {
-			return getJWTToken(usuario,"ROLE_ADMIN");
+			return getJWTToken(usuario, "ROLE_ADMIN");
 		}
 		return "Nombre de usuario o contraseña incorrectos.";
 	}
-	
+
 	private String getJWTToken(String username, String rol) {
 		String secretKey = "mySecretKey";
 		String roles = rol;

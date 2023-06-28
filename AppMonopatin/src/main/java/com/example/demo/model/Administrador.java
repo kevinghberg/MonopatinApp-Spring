@@ -27,8 +27,6 @@ public class Administrador {
 	@Column
 	private String password;
 
-	private String token;
-
 	public Administrador() {
 	}
 
@@ -61,14 +59,6 @@ public class Administrador {
 		this.password = password;
 	}
 	
-	public void setToken(String token) {
-		this.token = token;
-	}
-
-	public String getToken() {
-		return token;
-	}
-
 	public String getPassword() {
 		return password;
 	}

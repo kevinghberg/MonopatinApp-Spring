@@ -64,8 +64,10 @@ public class ViajeServicio {
 			return false;
 	}
 
-	public Viaje registrarViaje(ViajeMonopatinUsuarioDto vmudto,double saldoMaximo) {
+	public Viaje registrarViaje(ViajeMonopatinUsuarioDto vmudto, double saldoMaximo) {
 		Viaje viaje = new Viaje();
+		System.out.println(vmudto);
+		System.out.println(saldoMaximo);
 		Monopatin monopatin = monopatinRepository.findByIdMonopatin(vmudto.getIdMonopatin());
 		Parada paradaComienzo = paradaRepository.findById(vmudto.getIdParadaComienzo());
 		Parada paradaDestino = paradaRepository.findById(vmudto.getIdParadaDestino());
@@ -143,8 +145,6 @@ public class ViajeServicio {
 		return null;
 	}
 
-
-
 	public List<Viaje> findAll() {
 		return viajeRepository.findAll();
 	}
@@ -164,5 +164,10 @@ public class ViajeServicio {
 			return lista;
 		}
 		return null;
+	}
+
+	public boolean verificarTokenContieneEmail(String email, String token) {
+		
+		return token.contains(email);
 	}
 }

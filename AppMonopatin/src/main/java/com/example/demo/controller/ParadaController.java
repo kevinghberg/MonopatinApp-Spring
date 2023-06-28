@@ -64,5 +64,4 @@ public class ParadaController {
 		return paradaServicio.obtenerParadasCercanas(longitud, latitud, distancia);
 	}
 
-	// https://stackoverflow.com/questions/27379233/android-find-nearest-location-to-my-current-place
 }

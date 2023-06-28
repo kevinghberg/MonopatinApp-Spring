@@ -76,7 +76,7 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
 		return true;
 	}
 	
-	public static boolean verificarRol(String token, String rol) {
+	public static boolean verificarTokenContieneAutorizacion(String token, String rol) {
 		String[] chunks = token.split("\\.");
 		Base64.Decoder decoder = Base64.getUrlDecoder();
 		String payload = new String(decoder.decode(chunks[1]));
