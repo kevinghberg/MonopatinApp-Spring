@@ -2,6 +2,8 @@ package com.example.demo.model;
 
 import javax.persistence.*;
 
+import com.example.demo.security.PasswordUtils;
+
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -31,7 +33,11 @@ public class Usuario {
 
 	@Column(unique = true)
 	private String email;
-
+	
+	@Column
+	@ApiModelProperty(hidden = true)
+	private String password;
+	
 	@Column
 	@ApiModelProperty(hidden = true)
 	private boolean estadoCuentaAnulada;
@@ -43,12 +49,13 @@ public class Usuario {
 	public Usuario() {
 	}
 
-	public Usuario(String nombre, String apellido, String celular, String email) {
+	public Usuario(String nombre, String apellido, String celular, String email, String password) {
 		this.nombre = nombre;
 		this.apellido = apellido;
 		this.celular = celular;
 		this.email = email;
 		this.estadoCuentaAnulada = false;
+		this.password = PasswordUtils.hashPassword(password);
 	}
 
 	public Usuario(String nombre) {
@@ -109,6 +116,10 @@ public class Usuario {
 
 	public void setEnViaje(boolean enViaje) {
 		this.enViaje = enViaje;
+	}
+	
+	public String getPassword() {
+		return password;
 	}
 
 }

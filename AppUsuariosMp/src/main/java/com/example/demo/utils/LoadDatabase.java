@@ -22,7 +22,7 @@ class LoadDatabase {
 	CommandLineRunner initDatabase(@Qualifier("cuentaMercadoPagoServicio") CuentaMercadoPagoServicio mps,
 			@Qualifier("usuarioServicio") UsuarioServicio us) {
 		return args -> {
-			us.save(new Usuario("Gustavo","Sierra","2262516630","gustavodavid04@gmail.com"));
+			us.save(new Usuario("Gustavo","Sierra","2262516630","gustavodavid04@gmail.com","123456"));
 			mps.save(new CuentaMercadoPago(10000,"sierragustavo@yahoo.com"));
 			mps.agregarRelacionUsuario(1,1);
 		};

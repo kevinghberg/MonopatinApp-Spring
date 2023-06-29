@@ -41,6 +41,16 @@ public class UsuarioController {
 		return usuarioServicio.findAll();
 	}
 
+	@GetMapping("/obtener/email/{email}")
+	public Usuario findByEmail(@PathVariable("email") String email) {
+		return usuarioServicio.findByEmail(email);
+	}
+
+	@GetMapping("/obtener/id/{id}")
+	public Usuario findById(@PathVariable("id") int id) {
+		return usuarioServicio.findByIdUsuario(id);
+	}
+
 	@PostMapping(value = "/agregar", headers = "content-type=application/json")
 	public ResponseEntity<Usuario> agregarUser(@RequestBody Usuario usuario) {
 		if (validate(usuario.getEmail())) {
@@ -48,11 +58,6 @@ public class UsuarioController {
 		} else {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
-	}
-
-	public static boolean validate(String emailStr) {
-		Matcher matcher = patterCheckEmail.matcher(emailStr);
-		return matcher.matches();
 	}
 
 	@DeleteMapping(value = "/borrar/{id}")
@@ -79,8 +84,8 @@ public class UsuarioController {
 
 	@PutMapping(value = "/enviaje/{id}/{estado}")
 	public ResponseEntity<Boolean> cambiarEstadoEnViaje(@PathVariable int id, @PathVariable boolean estado) {
-		Usuario usuario = usuarioServicio.findByIdUsuario(id);
 		System.out.println("entrando a enviaje, id: " + id + " estado: " + estado);
+		Usuario usuario = usuarioServicio.findByIdUsuario(id);
 		if (usuario != null) {
 			System.out.println("existe el usuario");
 			usuario.setEnViaje(estado);
@@ -89,6 +94,11 @@ public class UsuarioController {
 		} else {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
+	}
+
+	public static boolean validate(String emailStr) {
+		Matcher matcher = patterCheckEmail.matcher(emailStr);
+		return matcher.matches();
 	}
 
 }

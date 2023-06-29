@@ -2,12 +2,9 @@ package com.example.demo.services;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 
 import com.example.demo.model.CuentaMercadoPago;
 import com.example.demo.model.Usuario;
@@ -28,6 +25,10 @@ public class UsuarioServicio {
 
 	public Usuario findByIdUsuario(int idUsuario) {
 		return usuarioRepository.findByIdUsuario(idUsuario);
+	}
+	
+	public Usuario findByEmail(String email) {
+		return usuarioRepository.findByEmail(email);
 	}
 
 	public boolean delete(int id) {
@@ -75,5 +76,6 @@ public class UsuarioServicio {
 		usuario.setEnViaje(estado);
 		usuarioRepository.save(usuario);
 	}
+
 	
 }
