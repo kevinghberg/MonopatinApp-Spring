@@ -14,9 +14,9 @@ import org.springframework.web.client.RestTemplate;
 
 import com.example.demo.dtos.ParadaMonopatinDto;
 import com.example.demo.dtos.ViajeMonopatinUsuarioDto;
-import com.example.demo.model.CuentaMercadoPago;
 import com.example.demo.model.Usuario;
 import com.example.demo.model.Viaje;
+import com.example.demo.model.CuentaMercadoPago;
 import com.example.demo.security.JWTAuthorizationFilter;
 import com.example.demo.services.ParadaServicio;
 import com.example.demo.services.ViajeServicio;
@@ -42,7 +42,6 @@ public class ViajeController {
 
 	static final String USUARIOS_URL = "http://localhost:8081/usuarios/";
 	static final String CUENTASMP_URL = "http://localhost:8081/cuentasmp/";
-
 
 
 	public ViajeController(@Qualifier("viajeServicio") ViajeServicio viajeServicio,
@@ -90,10 +89,10 @@ public class ViajeController {
 		if (viaje != null) {
 			int id_usuario = viaje.getIdUsuario();
 			double precioFinal = viaje.getPrecioFinal();
-			/*restTemplate.exchange(USUARIOS_URL + "enviaje/" + viaje.getIdUsuario() + "/" + false, HttpMethod.PUT, null,
-					boolean.class);*/
-			/*restTemplate.exchange(CUENTASMP_URL + "debitar_dinero/" + id_usuario + "/" + precioFinal, HttpMethod.PUT,
-					null, CuentaMercadoPago.class);*/
+			restTemplate.exchange(USUARIOS_URL + "enviaje/" + viaje.getIdUsuario() + "/" + false, HttpMethod.PUT, null,
+					boolean.class);
+			restTemplate.exchange(CUENTASMP_URL + "debitar_dinero/" + id_usuario + "/" + precioFinal, HttpMethod.PUT,
+					null, CuentaMercadoPago.class);
 			return new ResponseEntity<>(viaje, HttpStatus.OK);
 		} else {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

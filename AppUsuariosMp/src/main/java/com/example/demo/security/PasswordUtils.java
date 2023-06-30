@@ -1,7 +1,6 @@
 package com.example.demo.security;
 
 import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 import java.util.Arrays;
 import javax.crypto.spec.PBEKeySpec;
@@ -19,7 +18,6 @@ public class PasswordUtils {
 	private static final int DEFAULT_COST = 16;
 	private static final String ALGORITHM = "PBKDF2WithHmacSHA1";
 	private static final int SIZE = 256;
-	private static final SecureRandom RANDOM = new SecureRandom();
 	
 	public static String hashPassword(String password) {
 	    BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();

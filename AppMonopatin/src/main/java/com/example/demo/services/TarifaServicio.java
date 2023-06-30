@@ -1,13 +1,11 @@
 package com.example.demo.services;
 
 import java.time.LocalDate;
-import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import com.example.demo.model.Monopatin;
 import com.example.demo.model.Tarifa;
 import com.example.demo.repository.TarifaRepository;
 

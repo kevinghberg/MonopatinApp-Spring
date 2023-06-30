@@ -9,6 +9,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import com.example.demo.security.JWTAuthorizationFilter;
+
 @SpringBootApplication
 public class Application {
 
@@ -22,7 +24,14 @@ public class Application {
 
 		@Override
 		protected void configure(HttpSecurity http) throws Exception {
-			http.authorizeRequests(requests -> requests.antMatchers("/**").permitAll());
+			http.csrf().disable()
+				.addFilterAfter(new JWTAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
+				.authorizeRequests()
+				.antMatchers(HttpMethod.GET, "/**").permitAll()
+				.antMatchers(HttpMethod.PUT, "/**").permitAll()
+				.antMatchers(HttpMethod.POST, "/**").permitAll()
+				.antMatchers(HttpMethod.DELETE, "/**").permitAll()
+				.anyRequest().authenticated();
 		}
 	}
 

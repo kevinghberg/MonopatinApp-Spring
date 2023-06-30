@@ -1,9 +1,6 @@
 package com.example.demo.services;
 
-import java.sql.Date;
-import java.text.DecimalFormat;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -11,12 +8,10 @@ import org.springframework.stereotype.Service;
 
 import com.example.demo.dtos.ReporteViajeIdCountMonopatinDto;
 import com.example.demo.dtos.ViajeMonopatinUsuarioDto;
-import com.example.demo.model.CuentaMercadoPago;
 import com.example.demo.model.Localidad;
 import com.example.demo.model.Monopatin;
 import com.example.demo.model.Parada;
 import com.example.demo.model.Tarifa;
-import com.example.demo.model.Usuario;
 import com.example.demo.model.Viaje;
 import com.example.demo.repository.MonopatinRepository;
 import com.example.demo.repository.ParadaRepository;

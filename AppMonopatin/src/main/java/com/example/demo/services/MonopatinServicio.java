@@ -2,15 +2,12 @@ package com.example.demo.services;
 
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Iterator;
-
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.dtos.MonopatinEstadoDto;
 import com.example.demo.dtos.ReporteDobleIntDto;
 import com.example.demo.dtos.ReporteMonopatinDto;
-import com.example.demo.model.CuentaMercadoPago;
 import com.example.demo.model.Monopatin;
 import com.example.demo.repository.MonopatinRepository;
 

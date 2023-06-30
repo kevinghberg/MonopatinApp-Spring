@@ -86,6 +86,8 @@ public class MonopatinController {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 
 	}
+	
+	
 
 	@PutMapping("/enuso")
 	public ResponseEntity<Monopatin> actualizarEstadoEnUso(@RequestBody MonopatinEstadoDto mmdto,
