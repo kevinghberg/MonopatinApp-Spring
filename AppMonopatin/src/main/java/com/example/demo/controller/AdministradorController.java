@@ -19,8 +19,14 @@ import com.example.demo.model.Administrador;
 import com.example.demo.security.JWTAuthorizationFilter;
 import com.example.demo.services.AdministradorServicio;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+
 @RestController
 @RequestMapping("administrador")
+@Api(tags = "👨‍💼 Administrador Controller")
 public class AdministradorController {
 
 	@Qualifier("administradorServicio")
@@ -32,7 +38,12 @@ public class AdministradorController {
 		this.administradorServicio = administradorServicio;
 	}
 
-	@GetMapping("/")
+	 @GetMapping("/")
+	    @ApiOperation(value = "🔍 Obtener lista de administradores", notes = "Obtiene una lista de todos los administradores registrados.")
+	    @ApiResponses({
+	            @ApiResponse(code = 200, message = "OK", response = Administrador.class, responseContainer = "List"),
+	            @ApiResponse(code = 401, message = "No autorizado"),
+	    })
 	public ResponseEntity<List<Administrador>> getListaAdministradores(@RequestHeader("Authorization") String token) {
 		if (JWTAuthorizationFilter.verificarTokenContieneAutorizacion(token, "ROLE_ADMIN"))
 			return new ResponseEntity<>(administradorServicio.findAll(), HttpStatus.OK);
@@ -40,7 +51,13 @@ public class AdministradorController {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 	}
 
-	@PostMapping(value = "/agregar", headers = "content-type=application/json")
+	 @PostMapping(value = "/agregar", headers = "content-type=application/json")
+	    @ApiOperation(value = "➕ Agregar administrador", notes = "Agrega un nuevo administrador.")
+	    @ApiResponses({
+	            @ApiResponse(code = 201, message = "Creado", response = Administrador.class),
+	            @ApiResponse(code = 400, message = "Solicitud incorrecta"),
+	            @ApiResponse(code = 401, message = "No autorizado"),
+	    })
 	public ResponseEntity<Administrador> agregar(@RequestBody Administrador admin,
 			@RequestHeader("Authorization") String token) {
 		if (JWTAuthorizationFilter.verificarTokenContieneAutorizacion(token, "ROLE_ADMIN"))
@@ -52,7 +69,13 @@ public class AdministradorController {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 	}
 
-	@DeleteMapping(value = "/borrar/{id}")
+	 @DeleteMapping(value = "/borrar/{id}")
+	    @ApiOperation(value = "🗑️ Borrar administrador", notes = "Elimina un administrador por su ID.")
+	    @ApiResponses({
+	            @ApiResponse(code = 200, message = "OK"),
+	            @ApiResponse(code = 400, message = "Solicitud incorrecta"),
+	            @ApiResponse(code = 401, message = "No autorizado"),
+	    })
 	public ResponseEntity<String> borrar(@PathVariable int id, @RequestHeader("Authorization") String token) {
 		if (JWTAuthorizationFilter.verificarTokenContieneAutorizacion(token, "ROLE_ADMIN")) {
 			if (administradorServicio.delete(id))

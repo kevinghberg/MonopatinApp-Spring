@@ -18,8 +18,13 @@ import com.example.demo.dtos.ParadaMonopatinDto;
 import com.example.demo.model.Parada;
 import com.example.demo.services.ParadaServicio;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 @RestController
 @RequestMapping("paradas")
+@Api(tags = "🚩 Paradas Controller")
 public class ParadaController {
 
 	@Qualifier("paradaServicio")
@@ -36,12 +41,20 @@ public class ParadaController {
 		return paradaServicio.findAll();
 	}
 
-	@PostMapping(value = "/agregar", headers = "content-type=application/json")
+	   @PostMapping(value = "/agregar", headers = "content-type=application/json")
+	@ApiOperation(value = "Agrega una nueva parada",
+            notes = "➕ Agrega una nueva parada a la lista de paradas existentes")
 	public Parada agregar(@RequestBody Parada parada) {
 		return paradaServicio.save(parada);
 	}
-
+	
 	@PostMapping(value = "/agregarmonopatin")
+	 @ApiOperation(value = "Agrega una relación entre una parada y un monopatín",
+	            notes = "🔗 Agrega una relación entre una parada y un monopatín")
+	    @ApiResponses(value = {
+	            @ApiResponse(code = 200, message = "✅ Relación agregada exitosamente"),
+	            @ApiResponse(code = 400, message = "❌ No se pudo agregar la relación")
+	    })
 	public ResponseEntity<Parada> agregarRelacionMonopatin(@RequestBody ParadaMonopatinDto relacion) {
 		Parada parada = paradaServicio.agregarRelacionMonopatin(relacion);
 		if (parada != null)
@@ -49,8 +62,14 @@ public class ParadaController {
 		else
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 	}
-
-	@DeleteMapping(value = "/borrar/{id}")
+	 
+	 @DeleteMapping(value = "/borrar/{id}")
+	 @ApiOperation(value = "Elimina una parada",
+	            notes = "❌ Elimina una parada existente según su ID")
+	    @ApiResponses(value = {
+	            @ApiResponse(code = 200, message = "✅ Parada eliminada exitosamente"),
+	            @ApiResponse(code = 400, message = "❌ No se pudo eliminar la parada")
+	    })	
 	public ResponseEntity<String> borrar(@PathVariable int id) {
 		if (paradaServicio.delete(id)) {
 			return new ResponseEntity<>("Borrado", HttpStatus.OK);
@@ -58,7 +77,9 @@ public class ParadaController {
 			return new ResponseEntity<>("No borrado", HttpStatus.BAD_REQUEST);
 	}
 
-	@GetMapping(value = "/cercanas/{latitud}/{longitud}/{distancia}")
+	 @GetMapping(value = "/cercanas/{latitud}/{longitud}/{distancia}")
+	  @ApiOperation(value = "Obtiene paradas cercanas",
+	            notes = "📍 Obtiene una lista de paradas cercanas a una ubicación dada")
 	public List<Parada> obtenerCercanas(@PathVariable Double latitud, @PathVariable Double longitud,
 			@PathVariable double distancia) {
 		return paradaServicio.obtenerParadasCercanas(longitud, latitud, distancia);

@@ -19,7 +19,7 @@ public class Viaje {
 	private int id;
 
 	@Column
-	private int idUsuario;
+	private Integer idUsuario;
 	
 	@OneToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "monopatin_id")
@@ -81,11 +81,11 @@ public class Viaje {
 		this.id = id;
 	}
 	
-	public int getIdUsuario() {
+	public Integer getIdUsuario() {
 		return idUsuario;
 	}
 
-	public void setIdUsuario(int idUsuario) {
+	public void setIdUsuario(Integer idUsuario) {
 		this.idUsuario = idUsuario;
 	}
 

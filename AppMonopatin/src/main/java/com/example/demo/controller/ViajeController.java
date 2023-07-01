@@ -21,9 +21,16 @@ import com.example.demo.security.JWTAuthorizationFilter;
 import com.example.demo.services.ParadaServicio;
 import com.example.demo.services.ViajeServicio;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+
+
 @Configuration
 @RestController
 @RequestMapping("viajes")
+@Api(tags = "🚀 Viaje Controller")
 public class ViajeController {
 
 	@Qualifier("viajeServicio")
@@ -50,7 +57,9 @@ public class ViajeController {
 		this.viajeServicio = viajeServicio;
 	}
 
-	@GetMapping("/")
+	@ApiOperation(value = "Obtiene la lista de viajes",
+            notes = "🚀 Obtiene la lista de todos los viajes")
+    @GetMapping("/")
 	public ResponseEntity<List<Viaje>> getViajes(@RequestHeader("Authorization") String token) {
 		if (JWTAuthorizationFilter.verificarTokenContieneAutorizacion(token, "ROLE_ADMIN"))
 			return new ResponseEntity<>(viajeServicio.findAll(), HttpStatus.OK);
@@ -58,7 +67,14 @@ public class ViajeController {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 	}
 
-	@PostMapping(value = "/registrarviaje", headers = "content-type=application/json")
+	 @ApiOperation(value = "Registra un nuevo viaje",
+	            notes = "➕ Registra un nuevo viaje con los datos del usuario, monopatín y parada de inicio")
+	    @ApiResponses(value = {
+	            @ApiResponse(code = 200, message = "✅ Viaje registrado exitosamente"),
+	            @ApiResponse(code = 400, message = "❌ No se pudo registrar el viaje"),
+	            @ApiResponse(code = 401, message = "❌ No autorizado para realizar esta acción")
+	    })
+	    @PostMapping(value = "/registrarviaje", headers = "content-type=application/json")
 	public ResponseEntity<Viaje> registrarViaje(@RequestBody ViajeMonopatinUsuarioDto vmudto,
 			@RequestHeader("Authorization") String token) {
 		Usuario usuario = restTemplate
@@ -83,7 +99,13 @@ public class ViajeController {
 
 	}
 
-	@PutMapping(value = "registrarllegada/{id}")
+	   @ApiOperation(value = "Registra la llegada de un viaje",
+	            notes = "🏁 Registra la llegada de un viaje según su ID")
+	    @ApiResponses(value = {
+	            @ApiResponse(code = 200, message = "✅ Viaje llegada registrado exitosamente"),
+	            @ApiResponse(code = 400, message = "❌ No se pudo registrar la llegada del viaje")
+	    })
+	    @PutMapping(value = "registrarllegada/{id}")
 	public ResponseEntity<Viaje> registrarLlegada(@PathVariable int id) {
 		Viaje viaje = viajeServicio.registrarLlegada(id);
 		if (viaje != null) {
@@ -99,7 +121,13 @@ public class ViajeController {
 		}
 	}
 
-	@DeleteMapping(value = "/borrar/{id}")
+	   @ApiOperation(value = "Elimina un viaje",
+	            notes = "❌ Elimina un viaje según su ID")
+	    @ApiResponses(value = {
+	            @ApiResponse(code = 200, message = "✅ Viaje borrado exitosamente"),
+	            @ApiResponse(code = 400, message = "❌ No se pudo borrar el viaje")
+	    })
+	    @DeleteMapping(value = "/borrar/{id}")
 	public ResponseEntity<String> borrar(@PathVariable int id) {
 		if (viajeServicio.delete(id)) {
 			return new ResponseEntity<String>("Borrado" + id, HttpStatus.OK);

@@ -24,10 +24,15 @@ import org.springframework.web.client.RestTemplate;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 
 @Configuration
 @RestController
 @RequestMapping("login")
+@Api(tags = "🔐 Login Controller")
 public class LoginController {
 
 	@Qualifier("administradorServicio")
@@ -48,7 +53,12 @@ public class LoginController {
 
 	static final String USUARIOS_URL = "http://localhost:8081/usuarios/";
 
-	@GetMapping("/usuario/")
+	 @GetMapping("/usuario/")
+	 @ApiOperation(value = "🔒 Iniciar sesión como usuario", notes = "Inicia sesión como usuario utilizando el email y contraseña.")
+	    @ApiResponses({
+	            @ApiResponse(code = 200, message = "OK"),
+	            @ApiResponse(code = 401, message = "Nombre de usuario o contraseña incorrectos.")
+	    })
 	public String loginUsuario(@RequestParam("email") String email, @RequestParam("contrasena") String contrasena) {
 		Usuario user = restTemplate.exchange(USUARIOS_URL + "obtener/email/" + email, HttpMethod.GET, null, Usuario.class).getBody();
 		if (user != null && PasswordUtils.checkPassword(contrasena, user.getPassword())) {
@@ -57,7 +67,12 @@ public class LoginController {
 		return "Nombre de usuario o contraseña incorrectos.";
 	}
 
-	@GetMapping("/admin/")
+	 @GetMapping("/admin/")
+	    @ApiOperation(value = "🔒 Iniciar sesión como administrador", notes = "Inicia sesión como administrador utilizando el usuario y contraseña.")
+	    @ApiResponses({
+	            @ApiResponse(code = 200, message = "OK"),
+	            @ApiResponse(code = 401, message = "Nombre de usuario o contraseña incorrectos.")
+	    })
 	public String loginAdmin(@RequestParam("usuario") String usuario, @RequestParam("contrasena") String contrasena) {
 		Administrador admin = administradorServicio.findByUsuario(usuario);
 		if (admin != null && PasswordUtils.checkPassword(contrasena, admin.getPassword())) {
